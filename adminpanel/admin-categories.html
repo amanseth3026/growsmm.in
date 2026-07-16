@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Categories</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+  <style>
+    .category-toolbar .btn {
+      white-space: nowrap;
+    }
+
+    .category-table-shell {
+      max-height: 70vh;
+      overflow: auto;
+    }
+
+    .category-action-trigger {
+      min-width: 122px;
+    }
+
+    .category-top-actions .dropdown-menu {
+      min-width: 240px;
+    }
+
+    .category-action-menu {
+      position: fixed;
+      z-index: 1080;
+      min-width: 220px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .category-action-menu button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.94rem;
+    }
+
+    .category-action-menu button:hover:not(:disabled) {
+      background: #f8f9fa;
+    }
+
+    .category-action-menu button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 767.98px) {
+      .category-toolbar .btn,
+      .category-action-trigger {
+        width: 100%;
+      }
+
+      .category-table-shell table {
+        min-width: 880px;
+      }
+
+      .category-action-menu {
+        min-width: 200px;
+        max-width: calc(100vw - 1rem);
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="wrapper">
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <div id="sidebar-wrapper">
+    <div class="sidebar-heading d-flex justify-content-between align-items-center">
+      <div class="panel-brand">
+        <span class="panel-name" data-panel-name></span>
+        <small class="panel-mobile d-none" data-panel-mobile></small>
+      </div>
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarCloseBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+        <div class="list-group list-group-flush">
+      <a href="admin-dashboard.html" class="list-group-item"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="admin-orders.html" class="list-group-item"><i class="bi bi-box-seam"></i> Orders</a>
+      <a href="admin-users.html" class="list-group-item"><i class="bi bi-people"></i> Users</a>
+      <a href="admin-payments.html" class="list-group-item"><i class="bi bi-wallet2"></i> Payments</a>
+      <a href="admin-cash-type.html" class="list-group-item"><i class="bi bi-cash-coin"></i> Cash Type</a>
+      <a href="admin-categories.html" class="list-group-item active"><i class="bi bi-list-ul"></i> Categories</a>
+      <a href="admin-services.html" class="list-group-item"><i class="bi bi-gear"></i> Services</a>
+      <a href="admin-manual-services.html" class="list-group-item"><i class="bi bi-tools"></i> Manual Services</a>
+      <a href="admin-broadcast.html" class="list-group-item"><i class="bi bi-megaphone"></i> Announcements</a>
+      <a href="admin-analytics.html" class="list-group-item"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+      <a href="admin-settings.html" class="list-group-item"><i class="bi bi-sliders"></i> Settings</a>
+      <a href="#" id="btnLogout" class="list-group-item text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
+
+  <div id="page-content-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-primary shadow-sm" id="menu-toggle"><i class="bi bi-list"></i> Menu</button>
+        <h4 class="fw-bold m-0">Manage Categories</h4>
+      </div>
+      <div>
+        <a href="admin-services.html" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-left"></i> Back To Services</a>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-white">
+        <div class="row g-2 align-items-center category-toolbar">
+          <div class="col-12 col-md-4">
+            <input id="searchCategory" class="form-control form-control-sm" placeholder="Search category...">
+          </div>
+          <div class="col-12 col-md-8 d-grid gap-2 d-md-flex justify-content-md-end">
+            <button id="btnAddCategory" class="btn btn-sm btn-primary">
+              <i class="bi bi-plus-lg"></i> Add Category
+            </button>
+            <div class="dropdown category-top-actions">
+              <button
+                id="btnCategoryActionsToggle"
+                class="btn btn-sm btn-outline-secondary dropdown-toggle category-action-trigger"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="bi bi-list-ul me-1"></i> Actions
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li>
+                  <button id="btnDeleteSelected" class="dropdown-item text-danger" type="button">
+                    <i class="bi bi-trash3 me-2"></i> Delete Selected
+                  </button>
+                </li>
+                <li>
+                  <button id="btnDeleteEmptyCategories" class="dropdown-item text-danger" type="button">
+                    <i class="bi bi-trash3 me-2"></i> Delete Empty Categories
+                  </button>
+                </li>
+                <li>
+                  <button id="btnEnableSelected" class="dropdown-item text-success" type="button">
+                    <i class="bi bi-check2-circle me-2"></i> Enable Selected
+                  </button>
+                </li>
+                <li>
+                  <button id="btnDisableSelected" class="dropdown-item text-danger" type="button">
+                    <i class="bi bi-x-circle me-2"></i> Disable Selected
+                  </button>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <button id="btnRefreshCategories" class="dropdown-item" type="button">
+                    <i class="bi bi-arrow-clockwise me-2"></i> Refresh
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="categoryTableScroll" class="category-table-shell">
+        <table class="table table-sm table-hover mb-0">
+          <thead style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">
+            <tr>
+              <th width="40"><input type="checkbox" id="chkAllCategories"></th>
+              <th>Category</th>
+              <th width="130">Total Services</th>
+              <th width="130">Active Services</th>
+              <th width="120">Status</th>
+              <th width="160" class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="categoryTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card-footer bg-white small text-muted">
+        Categories: <span id="categoryCount">0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="categoryActionMenu" class="category-action-menu shadow d-none" aria-hidden="true">
+  <button type="button" data-action="move-up"><i class="bi bi-arrow-up"></i> Move Up</button>
+  <button type="button" data-action="move-down"><i class="bi bi-arrow-down"></i> Move Down</button>
+  <div class="border-top"></div>
+  <button type="button" data-action="rename"><i class="bi bi-pencil"></i> Rename</button>
+  <button type="button" data-action="enable"><i class="bi bi-check2-circle"></i> Enable</button>
+  <button type="button" data-action="disable"><i class="bi bi-x-circle"></i> Disable</button>
+  <button type="button" data-action="delete"><i class="bi bi-trash3"></i> Delete</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="admin-categories.js"></script>
+<script type="module" src="admin-sync.js"></script>
+</body>
+</html>
+

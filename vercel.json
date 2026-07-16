@@ -1,0 +1,64 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/auto-sync-services",
+      "schedule": "0 0,2,4,7,9,12,14,16,19,21 * * *"
+    }
+  ],
+  "redirects": [
+    { "source": "/blog.html", "destination": "/blog", "permanent": true },
+    { "source": "/blog/index.html", "destination": "/blog", "permanent": true },
+    { "source": "/blog/cheapest-smm-panel-india.html", "destination": "/blog/cheapest-smm-panel-india", "permanent": true },
+    { "source": "/blog/instagram-followers-panel.html", "destination": "/blog/instagram-followers-panel", "permanent": true },
+    { "source": "/blog/youtube-views-panel.html", "destination": "/blog/youtube-views-panel", "permanent": true },
+    { "source": "/blog/is-smm-panel-safe.html", "destination": "/blog/is-smm-panel-safe", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/blog", "destination": "/blog/index.html" },
+    { "source": "/blog/:slug", "destination": "/blog/:slug.html" },
+    { "source": "/api-test.html", "destination": "/pages/api-test.html" },
+    { "source": "/api.html", "destination": "/pages/api.html" },
+    { "source": "/seo-smm-panel-redirect.html", "destination": "/pages/seo-smm-panel-redirect.html" },
+    { "source": "/services.html", "destination": "/pages/services.html" },
+    { "source": "/signup.html", "destination": "/pages/signup.html" },
+    { "source": "/smm-growth-guide.html", "destination": "/pages/smm-growth-guide.html" },
+    { "source": "/arena.html", "destination": "/userpanel/arena.html" },
+    { "source": "/admin-arena.html", "destination": "/adminpanel/admin-arena.html" },
+    { "source": "/seo-smm-panel", "destination": "/pages/seo-smm-panel-redirect.html" },
+    { "source": "/smm-growth-guide", "destination": "/pages/smm-growth-guide.html" },
+    { "source": "/style.css", "destination": "/styles/style.css" },
+    { "source": "/category-order.js", "destination": "/scripts/category-order.js" },
+    { "source": "/firebase.js", "destination": "/scripts/firebase.js" },
+    { "source": "/index.js", "destination": "/scripts/index.js" },
+    { "source": "/panel-branding-core.js", "destination": "/scripts/panel-branding-core.js" },
+    { "source": "/password-utils.js", "destination": "/scripts/password-utils.js" },
+    { "source": "/services.js", "destination": "/scripts/services.js" },
+    { "source": "/signup.js", "destination": "/scripts/signup.js" },
+    { "source": "/site-branding.js", "destination": "/scripts/site-branding.js" },
+    { "source": "/sw.js", "destination": "/scripts/sw.js" },
+    { "source": "/__/auth/:splat*", "destination": "https://growsmm-7809e.firebaseapp.com/__/auth/:splat*" },
+    { "source": "/__/firebase/init.json", "destination": "https://growsmm-7809e.firebaseapp.com/__/firebase/init.json" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" }
+      ]
+    }
+  ]
+}

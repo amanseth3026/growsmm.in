@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Manual Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<div id="wrapper">
+  
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <div id="sidebar-wrapper">
+        <div class="sidebar-heading d-flex justify-content-between align-items-center">
+        <div class="panel-brand">
+          <span class="panel-name" data-panel-name></span>
+          <small class="panel-mobile d-none" data-panel-mobile></small>
+        </div>
+        <button class="btn btn-sm btn-light d-lg-none" id="sidebarCloseBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+        <div class="list-group list-group-flush">
+      <a href="admin-dashboard.html" class="list-group-item"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="admin-orders.html" class="list-group-item"><i class="bi bi-box-seam"></i> Orders</a>
+      <a href="admin-users.html" class="list-group-item"><i class="bi bi-people"></i> Users</a>
+      <a href="admin-payments.html" class="list-group-item"><i class="bi bi-wallet2"></i> Payments</a>
+      <a href="admin-cash-type.html" class="list-group-item"><i class="bi bi-cash-coin"></i> Cash Type</a>
+      <a href="admin-categories.html" class="list-group-item"><i class="bi bi-list-ul"></i> Categories</a>
+      <a href="admin-services.html" class="list-group-item"><i class="bi bi-gear"></i> Services</a>
+      <a href="admin-manual-services.html" class="list-group-item active"><i class="bi bi-tools"></i> Manual Services</a>
+      <a href="admin-broadcast.html" class="list-group-item"><i class="bi bi-megaphone"></i> Announcements</a>
+    <a href="admin-analytics.html" class="list-group-item"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+      <a href="admin-settings.html" class="list-group-item"><i class="bi bi-sliders"></i> Settings</a>
+      <a href="#" id="btnLogout" class="list-group-item text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
+
+  <div id="page-content-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-primary shadow-sm" id="menu-toggle">
+                <i class="bi bi-list"></i> Menu
+            </button>
+            <h4 class="fw-bold m-0">Manual Services</h4>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-3">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold m-0">Manual Service Builder</h6>
+                <small class="text-muted">Orders will stay pending until you update them manually.</small>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="manualServiceForm">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-3">
+                        <label class="small text-muted">Service ID</label>
+                        <input id="manualId" class="form-control form-control-sm" placeholder="e.g. insta_custom_1" required>
+                        <small class="text-muted" style="font-size: 10px;">Allowed: a-z, 0-9, _ and -. Do not start with manual_.</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small text-muted">Service Name</label>
+                        <input id="manualTitle" class="form-control form-control-sm" placeholder="e.g. Instagram Custom Mentions" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="small text-muted">Category</label>
+                        <input id="manualCategory" class="form-control form-control-sm" placeholder="e.g. Instagram" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="small text-muted">Price / 1000 (INR)</label>
+                        <input id="manualPrice" type="number" class="form-control form-control-sm" step="0.01" placeholder="e.g. 120" required>
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-2">
+                    <div class="col-md-2">
+                        <label class="small text-muted">Min Qty</label>
+                        <input id="manualMin" type="number" class="form-control form-control-sm" value="10" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="small text-muted">Max Qty</label>
+                        <input id="manualMax" type="number" class="form-control form-control-sm" placeholder="0 = no limit">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="small text-muted">Average Time</label>
+                        <input id="manualAvgTime" class="form-control form-control-sm" placeholder="e.g. 1-12 hours">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="manualActive" checked>
+                            <label class="form-check-label small text-muted" for="manualActive">Active</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-12">
+                        <label class="small text-muted">Description</label>
+                        <textarea id="manualDesc" class="form-control form-control-sm" rows="2" placeholder="Service details, notes, or requirements"></textarea>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-success fw-bold" id="manualSaveBtn"><i class="bi bi-check-lg"></i> Save Manual Service</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="manualClearBtn">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="row align-items-center g-2">
+                <div class="col-md-6">
+                    <input id="manualSearch" class="form-control form-control-sm" placeholder="Search manual service..." autocomplete="off">
+                </div>
+                <div class="col-md-6 text-end">
+                    <span class="small text-muted">Total: <span id="manualCount">0</span></span>
+                </div>
+            </div>
+        </div>
+        <div style="height: 60vh; overflow-y: auto;">
+            <table class="table table-sm table-hover mb-0" style="font-size: 0.85rem;">
+                <thead style="position: sticky; top: 0; background: #f8f9fa; z-index: 2; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <tr>
+                        <th width="40">On</th>
+                        <th width="140">ID</th>
+                        <th width="140">Category</th>
+                        <th>Service Name</th>
+                        <th width="110">Price / 1000</th>
+                        <th width="70">Min</th>
+                        <th width="70">Max</th>
+                        <th width="110" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="manualServiceTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="admin-manual-services.js"></script>
+
+<script type="module" src="admin-sync.js"></script>
+</body>
+</html>
+
+
+
+

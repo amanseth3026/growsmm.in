@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Announcements</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="broadcasts-widget.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    .broadcast-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .broadcast-line {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .broadcast-line .icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-size: 1rem;
+    }
+
+    .broadcast-line .title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+      color: #1e293b;
+    }
+
+    .broadcast-line .desc {
+      font-size: 0.82rem;
+      color: #475569;
+    }
+
+    .broadcast-line .meta {
+      font-size: 0.72rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .broadcast-line .pill {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 0.68rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .broadcast-line .cta {
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #0d6efd;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #64748b;
+      padding: 40px 12px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li class="active"><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>Announcements</h5>
+          <small>Latest updates from admin</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="broadcast-stack" id="broadcastsStack"></div>
+    <div id="broadcastEmpty" class="empty-state d-none">No announcements available.</div>
+  </main>
+
+  <script src="panel-theme.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script type="module" src="broadcasts.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>
+
+
+
+
+

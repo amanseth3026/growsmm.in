@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Help Center</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    :root {
+      --ai-bg: #0b0b1a;
+      --ai-bg-2: #12122a;
+      --ai-surface: rgba(255,255,255,0.04);
+      --ai-border: rgba(255,255,255,0.09);
+      --ai-text: #e9e9f4;
+      --ai-muted: #9aa0b4;
+      --ai-grad: linear-gradient(135deg,#7c5cff 0%,#ff4ecd 55%,#ffb457 100%);
+      --ai-user-bubble: linear-gradient(135deg,#7c5cff,#ff4ecd);
+      --ai-ai-bubble: rgba(255,255,255,0.05);
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body.panel-theme.support-page {
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .main-content.support-main {
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
+    }
+
+    .main-content.support-main .top-navbar {
+      flex-shrink: 0;
+      margin-bottom: 12px;
+    }
+
+    .chat-shell {
+      background: linear-gradient(180deg, var(--ai-bg-2) 0%, var(--ai-bg) 100%);
+      border-radius: 20px;
+      border: 1px solid var(--ai-border);
+      box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 150px);
+    }
+
+    .main-content.support-main .chat-shell {
+      flex: 1;
+      min-height: 0;
+      height: auto;
+    }
+
+    .chat-head {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--ai-border);
+      background: linear-gradient(135deg, rgba(124,92,255,.35), rgba(255,78,205,.28));
+      backdrop-filter: blur(10px);
+      color: #fff;
+    }
+
+    .bot-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--ai-grad);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      position: relative;
+      box-shadow: 0 8px 24px -6px rgba(255,78,205,.55);
+    }
+
+    .bot-avatar::after {
+      content: "";
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #22c55e;
+      border: 2px solid #fff;
+    }
+
+    .chat-title {
+      font-size: 0.94rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .chat-status {
+      font-size: 0.74rem;
+      color: rgba(255, 255, 255, 0.84);
+      margin: 0;
+    }
+
+    .chat-head .btn {
+      border-color: rgba(255, 255, 255, 0.28) !important;
+      color: #fff !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .chat-head .btn:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+    }
+
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(124,92,255,.14), transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(255,78,205,.12), transparent 45%),
+        var(--ai-bg);
+    }
+
+    .main-content.support-main .chat-container {
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .main-content.support-main .chat-head,
+    .main-content.support-main .suggestions,
+    .main-content.support-main .input-bar {
+      flex-shrink: 0;
+    }
+
+    .message {
+      max-width: min(82%, 640px);
+      padding: 11px 14px 22px;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      word-break: break-word;
+      box-shadow: 0 8px 24px -12px rgba(0,0,0,.5);
+      position: relative;
+      color: var(--ai-text);
+      border: 0;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: var(--ai-user-bubble);
+      color: #fff;
+      border-top-right-radius: 4px;
+    }
+
+    .msg-ai {
+      align-self: flex-start;
+      background: var(--ai-ai-bubble);
+      border: 1px solid var(--ai-border);
+      color: var(--ai-text);
+      border-top-left-radius: 4px;
+      backdrop-filter: blur(10px);
+    }
+
+    .msg-meta {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,.55);
+      position: absolute;
+      bottom: 5px;
+      right: 10px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .msg-user .msg-meta { color: rgba(255,255,255,.75); }
+
+    .typing-dots {
+      display: none;
+      align-self: flex-start;
+      background: var(--ai-ai-bubble);
+      border: 1px solid var(--ai-border);
+      border-radius: 16px;
+      padding: 10px 14px;
+      width: fit-content;
+      margin-left: 4px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #c7b8ff;
+      display: inline-block;
+      margin: 0 2px;
+      animation: jump 1.2s infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: .15s; }
+    .dot:nth-child(3) { animation-delay: .3s; }
+
+    @keyframes jump {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    .suggestions {
+      padding: 10px 12px;
+      border-top: 1px solid var(--ai-border);
+      overflow-x: auto;
+      white-space: nowrap;
+      background: rgba(255,255,255,.02);
+      display: flex;
+      gap: 8px;
+      scrollbar-width: none;
+    }
+
+    .suggestions::-webkit-scrollbar { display: none; }
+
+    .chip {
+      display: inline-block;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--ai-border);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--ai-text);
+      transition: all 0.18s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .chip:hover {
+      background: var(--ai-grad);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .input-bar {
+      border-top: 1px solid var(--ai-border);
+      background: rgba(255,255,255,.03);
+      padding: 10px 10px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .input-wrap {
+      flex: 1;
+      border: 1px solid var(--ai-border);
+      background: rgba(255,255,255,.05);
+      border-radius: 999px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+    }
+
+    .input-icon {
+      color: var(--ai-muted);
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .input-bar input {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      padding: 9px 0;
+      outline: none;
+      color: #fff;
+      min-width: 0;
+      font-size: 0.92rem;
+    }
+
+    .input-bar input::placeholder { color: #6b7085; }
+
+    .send-btn {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--ai-grad);
+      color: #fff;
+      box-shadow: 0 8px 22px -6px rgba(255,78,205,.55);
+      transition: background 0.18s ease, transform 0.18s ease;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .chat-container a,
+    .message a {
+      color: #7ce8ff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .chat-container a:hover,
+    .message a:hover {
+      text-decoration: underline;
+    }
+
+    .chat-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 0;
+      background: var(--ai-grad);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      margin-top: 6px;
+    }
+
+    .chat-action-btn:hover { color:#fff; filter:brightness(1.08) }
+
+    .welcome-card {
+      align-self: center;
+      max-width: 96%;
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--ai-border);
+      background: linear-gradient(180deg,rgba(124,92,255,.10),rgba(255,78,205,.06));
+      color: var(--ai-text);
+      backdrop-filter: blur(10px);
+    }
+
+    .welcome-card .badge.pointer {
+      cursor: pointer;
+      background: rgba(255,255,255,.06) !important;
+      border-color: var(--ai-border) !important;
+      color: var(--ai-text) !important;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-weight: 600;
+    }
+
+    .welcome-card .badge.pointer:hover {
+      background: var(--ai-grad) !important;
+      border-color: transparent !important;
+      color: #fff !important;
+    }
+
+    .pointer {
+      cursor: pointer;
+    }
+
+    @media (max-width: 575px) {
+      .message {
+        max-width: 88%;
+      }
+
+      .chat-shell {
+        min-height: calc(100vh - 132px);
+      }
+    }
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme support-page">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li class="active"><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content support-main">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>AI Support</h5>
+          <small>Smart assistant online</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-shell">
+      <div class="chat-head">
+        <div class="bot-avatar"><i class="bi bi-robot"></i></div>
+        <div>
+          <p class="chat-title mb-0">Smart Assistant</p>
+          <p class="chat-status">online now</p>
+        </div>
+        <button id="btnClear" class="btn btn-sm ms-auto" type="button" title="Clear chat">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+
+      <div class="chat-container" id="chatContainer">
+        <div class="typing-dots" id="typingIndicator">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+      </div>
+
+      <div class="suggestions">
+        <span class="chip" onclick="sendChip('My Balance')">Balance</span>
+        <span class="chip" onclick="sendChip('Order Status')">Order</span>
+        <span class="chip" onclick="sendChip('Refill')">Refill</span>
+        <span class="chip" onclick="sendChip('Add Funds')">Add Funds</span>
+      </div>
+
+      <div class="input-bar">
+        <div class="input-wrap">
+          <i class="bi bi-emoji-smile input-icon"></i>
+          <input id="msgInput" placeholder="Type a message" autocomplete="off">
+        </div>
+        <button id="btnSend" class="send-btn" type="button"><i class="bi bi-send-fill"></i></button>
+      </div>
+    </div>
+  </main>
+
+  <script src="panel-theme.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script type="module" src="help.js"></script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+  <style>
+    .dash-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .dash-status {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 14px;
+    }
+    .dash-status.error {
+      color: #b91c1c;
+    }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .overview-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+      text-decoration: none;
+      color: #0f172a;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+    }
+    .overview-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      color: #0f172a;
+    }
+    .overview-card.active {
+      border-color: var(--panel-accent);
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+    }
+    .overview-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      background: #eef2ff;
+      color: var(--panel-accent);
+    }
+    .overview-label {
+      font-size: 0.82rem;
+      color: #64748b;
+      font-weight: 600;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .overview-value {
+      font-size: 1.45rem;
+      line-height: 1;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .detail-wrap {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    }
+    .detail-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .detail-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .detail-note {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin: 0;
+    }
+    .sub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+    .sub-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .sub-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+    }
+    .sub-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.1;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .provider-inline-status {
+      font-size: 0.84rem;
+      color: #64748b;
+      min-height: 20px;
+    }
+    .provider-inline-status.error {
+      color: #b91c1c;
+    }
+    .provider-inline-status.success {
+      color: #166534;
+    }
+    .provider-table-wrap {
+      max-height: 48vh;
+      overflow: auto;
+    }
+    .masked-key {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.82rem;
+    }
+    .provider-balance {
+      font-weight: 700;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+
+<div id="wrapper">
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <div id="sidebar-wrapper">
+    <div class="sidebar-heading d-flex justify-content-between align-items-center">
+      <div class="panel-brand">
+        <span class="panel-name" data-panel-name></span>
+      </div>
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarCloseBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="list-group list-group-flush">
+      <a href="admin-dashboard.html" class="list-group-item active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="admin-orders.html" class="list-group-item"><i class="bi bi-box-seam"></i> Orders</a>
+      <a href="admin-users.html" class="list-group-item"><i class="bi bi-people"></i> Users</a>
+      <a href="admin-payments.html" class="list-group-item"><i class="bi bi-wallet2"></i> Payments</a>
+      <a href="admin-cash-type.html" class="list-group-item"><i class="bi bi-cash-coin"></i> Cash Type</a>
+      <a href="admin-categories.html" class="list-group-item"><i class="bi bi-list-ul"></i> Categories</a>
+      <a href="admin-services.html" class="list-group-item"><i class="bi bi-gear"></i> Services</a>
+      <a href="admin-manual-services.html" class="list-group-item"><i class="bi bi-tools"></i> Manual Services</a>
+      <a href="admin-broadcast.html" class="list-group-item"><i class="bi bi-megaphone"></i> Announcements</a>
+      <a href="admin-analytics.html" class="list-group-item"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+      <a href="admin-settings.html" class="list-group-item"><i class="bi bi-sliders"></i> Settings</a>
+      <a href="#" id="btnLogout" class="list-group-item text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
+
+  <div id="page-content-wrapper">
+    <div class="dash-top">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-primary shadow-sm" id="menu-toggle"><i class="bi bi-list"></i> Menu</button>
+        <h4 class="fw-bold m-0">Dashboard</h4>
+      </div>
+      <div>
+        <button id="btnRefreshDashboard" type="button" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+      </div>
+    </div>
+
+    <div id="dashboardStatus" class="dash-status" role="status" aria-live="polite">Loading dashboard data...</div>
+
+    <div class="overview-grid">
+      <button type="button" class="overview-card metric-toggle active" data-target="orders">
+        <div class="overview-icon"><i class="bi bi-cart"></i></div>
+        <div>
+          <div class="overview-label">Total Orders</div>
+          <div class="overview-value" id="metricOrders">0</div>
+        </div>
+      </button>
+
+      <button type="button" class="overview-card metric-toggle" data-target="users">
+        <div class="overview-icon"><i class="bi bi-people"></i></div>
+        <div>
+          <div class="overview-label">Total Users</div>
+          <div class="overview-value" id="metricUsers">0</div>
+        </div>
+      </button>
+
+      <button type="button" class="overview-card metric-toggle" data-target="services">
+        <div class="overview-icon"><i class="bi bi-gear"></i></div>
+        <div>
+          <div class="overview-label">Total Services</div>
+          <div class="overview-value" id="metricServices">0</div>
+        </div>
+      </button>
+
+      <button type="button" class="overview-card metric-toggle" data-target="payments">
+        <div class="overview-icon"><i class="bi bi-wallet2"></i></div>
+        <div>
+          <div class="overview-label">Total Payments</div>
+          <div class="overview-value" id="metricPayments">0</div>
+        </div>
+      </button>
+
+      <button type="button" class="overview-card metric-toggle" data-target="providers">
+        <div class="overview-icon"><i class="bi bi-hdd-network"></i></div>
+        <div>
+          <div class="overview-label">Total Providers</div>
+          <div class="overview-value" id="metricProviders">0</div>
+          <small class="text-muted">Manage provider API here</small>
+        </div>
+      </button>
+    </div>
+
+    <div class="detail-wrap">
+      <section id="section-orders" class="detail-section">
+        <div class="detail-head">
+          <h5 class="detail-title">Order Details</h5>
+          <p class="detail-note">Status wise breakdown</p>
+        </div>
+        <div class="sub-grid">
+          <div class="sub-card"><div class="sub-label">Total</div><div class="sub-value" id="ordersTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Pending</div><div class="sub-value" id="ordersPending">0</div></div>
+          <div class="sub-card"><div class="sub-label">Processing</div><div class="sub-value" id="ordersProcessing">0</div></div>
+          <div class="sub-card"><div class="sub-label">Completed</div><div class="sub-value" id="ordersCompleted">0</div></div>
+          <div class="sub-card"><div class="sub-label">Cancelled</div><div class="sub-value" id="ordersCancelled">0</div></div>
+          <div class="sub-card"><div class="sub-label">Refunded</div><div class="sub-value" id="ordersRefunded">0</div></div>
+          <div class="sub-card"><div class="sub-label">Dripfeed Total</div><div class="sub-value" id="ordersDripTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Dripfeed Pending</div><div class="sub-value" id="ordersDripPending">0</div></div>
+        </div>
+      </section>
+
+      <section id="section-users" class="detail-section hidden">
+        <div class="detail-head">
+          <h5 class="detail-title">User Details</h5>
+          <p class="detail-note">Active users = orders in last 7 days. Balanced users = approved add-funds users.</p>
+        </div>
+        <div class="sub-grid">
+          <div class="sub-card"><div class="sub-label">Total Users</div><div class="sub-value" id="usersTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Active Users (7 Days)</div><div class="sub-value" id="usersActive7d">0</div></div>
+          <div class="sub-card"><div class="sub-label">Balanced Users</div><div class="sub-value" id="usersBalanced">0</div></div>
+          <div class="sub-card"><div class="sub-label">Normal Users</div><div class="sub-value" id="usersNormal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Users With Orders</div><div class="sub-value" id="usersWithOrders">0</div></div>
+          <div class="sub-card"><div class="sub-label">Users With Add-Funds</div><div class="sub-value" id="usersWithPayments">0</div></div>
+        </div>
+      </section>
+
+      <section id="section-services" class="detail-section hidden">
+        <div class="detail-head">
+          <h5 class="detail-title">Service Details</h5>
+          <p class="detail-note">Vendor + manual service overview</p>
+        </div>
+        <div class="sub-grid">
+          <div class="sub-card"><div class="sub-label">Total Services</div><div class="sub-value" id="servicesTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Active Services</div><div class="sub-value" id="servicesActive">0</div></div>
+          <div class="sub-card"><div class="sub-label">Inactive Services</div><div class="sub-value" id="servicesInactive">0</div></div>
+          <div class="sub-card"><div class="sub-label">Vendor Services</div><div class="sub-value" id="servicesVendorTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Manual Services</div><div class="sub-value" id="servicesManualTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Categories</div><div class="sub-value" id="servicesCategories">0</div></div>
+        </div>
+      </section>
+
+      <section id="section-payments" class="detail-section hidden">
+        <div class="detail-head">
+          <h5 class="detail-title">Payment Details</h5>
+          <p class="detail-note">All payment request breakdown</p>
+        </div>
+        <div class="sub-grid">
+          <div class="sub-card"><div class="sub-label">Total Requests</div><div class="sub-value" id="paymentsTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Approved/Completed</div><div class="sub-value" id="paymentsApproved">0</div></div>
+          <div class="sub-card"><div class="sub-label">Pending</div><div class="sub-value" id="paymentsPending">0</div></div>
+          <div class="sub-card"><div class="sub-label">Failed/Rejected</div><div class="sub-value" id="paymentsFailed">0</div></div>
+          <div class="sub-card"><div class="sub-label">Manual Method</div><div class="sub-value" id="paymentsManual">0</div></div>
+          <div class="sub-card"><div class="sub-label">Auto Method</div><div class="sub-value" id="paymentsAuto">0</div></div>
+        </div>
+      </section>
+
+      <section id="section-providers" class="detail-section hidden">
+        <div class="detail-head">
+          <h5 class="detail-title">Provider Details</h5>
+          <p class="detail-note">Click edit to update API or delete provider</p>
+        </div>
+        <div class="sub-grid mb-3">
+          <div class="sub-card"><div class="sub-label">Total Providers</div><div class="sub-value" id="providersTotal">0</div></div>
+          <div class="sub-card"><div class="sub-label">Providers With Services</div><div class="sub-value" id="providersWithServices">0</div></div>
+          <div class="sub-card"><div class="sub-label">Idle Providers</div><div class="sub-value" id="providersIdle">0</div></div>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+          <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold mb-0">Add / Update Provider API</h6>
+            <button id="btnProviderNewInline" type="button" class="btn btn-sm btn-outline-dark">
+              <i class="bi bi-plus-lg"></i> New Provider
+            </button>
+          </div>
+          <div class="card-body">
+            <form id="providerFormInline">
+              <input type="hidden" id="providerInlineDocId">
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <label class="small text-muted">Provider Name</label>
+                  <input id="providerInlineName" class="form-control form-control-sm" required placeholder="e.g. FastSMM">
+                </div>
+                <div class="col-md-6">
+                  <label class="small text-muted">API URL</label>
+                  <input id="providerInlineUrl" class="form-control form-control-sm" required placeholder="https://provider.com/api/v2">
+                </div>
+                <div class="col-md-6">
+                  <label class="small text-muted">API Key</label>
+                  <input id="providerInlineKey" class="form-control form-control-sm" required placeholder="Enter API key">
+                </div>
+                <div class="col-md-2">
+                  <label class="small text-muted">Profit %</label>
+                  <input id="providerInlineProfit" type="number" class="form-control form-control-sm" min="0" step="0.01" value="20">
+                </div>
+                <div class="col-md-2">
+                  <label class="small text-muted">Currency</label>
+                  <select id="providerInlineCurrency" class="form-select form-select-sm">
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label class="small text-muted">Exchange</label>
+                  <input id="providerInlineExchange" type="number" class="form-control form-control-sm" min="0.01" step="0.01" value="1">
+                </div>
+              </div>
+              <div class="d-flex justify-content-end gap-2 mt-3">
+                <button id="btnProviderCancelInline" type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                <button id="btnProviderSaveInline" type="submit" class="btn btn-sm btn-primary">Save Provider</button>
+              </div>
+            </form>
+            <div id="providerInlineStatus" class="provider-inline-status mt-2"></div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-header bg-white">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-6">
+                <h6 class="fw-bold mb-0">Provider List</h6>
+              </div>
+              <div class="col-md-6">
+                <input id="providerInlineSearch" class="form-control form-control-sm" placeholder="Search provider by name / url / id">
+              </div>
+            </div>
+          </div>
+          <div class="provider-table-wrap">
+            <table class="table table-sm table-hover mb-0">
+              <thead style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">
+                <tr>
+                  <th>Name (ID)</th>
+                  <th>API URL</th>
+                  <th>API Key</th>
+                  <th>API Balance</th>
+                  <th>Currency</th>
+                  <th>Profit %</th>
+                  <th>Linked Services</th>
+                  <th>Updated</th>
+                  <th width="120">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="providerInlineTableBody">
+                <tr><td colspan="9" class="text-center text-muted py-3">Loading providers...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="admin-dashboard.js"></script>
+<script type="module" src="admin-sync.js"></script>
+</body>
+</html>

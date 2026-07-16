@@ -1,0 +1,635 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Prize Arena</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+
+  <style>
+    .pa-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .pa-head h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pa-head h2 i {
+      color: #eab308;
+    }
+
+    .pa-head small {
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .pa-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-settings {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      color: #0f172a;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-new {
+      background: linear-gradient(90deg, #6d28d9, #4f46e5);
+      color: #fff;
+      border: 0;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.32);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-new:hover,
+    .btn-settings:hover {
+      color: inherit;
+      opacity: 0.94;
+    }
+
+    .pa-tabs {
+      background: #fff;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 14px;
+      padding: 6px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .pa-tab {
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #475569;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 10px 8px;
+      transition: all 0.15s ease;
+    }
+
+    .pa-tab.active {
+      background: linear-gradient(90deg, #4f46e5, #7c3aed);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .stat-card .lbl {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .stat-card .val {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 6px;
+    }
+
+    .pa-pane {
+      display: block;
+    }
+
+    .pa-pane.d-none {
+      display: none;
+    }
+
+    .pa-card {
+      background: #fff;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+      margin-bottom: 18px;
+    }
+
+    .pa-card h6 {
+      margin: 0 0 14px 0;
+      font-weight: 800;
+      color: #0f172a;
+      font-size: 1.02rem;
+    }
+
+    .pa-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pa-table th {
+      text-align: left;
+      padding: 10px 8px;
+      color: #64748b;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .pa-table td {
+      padding: 14px 8px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1f2937;
+      font-size: 0.92rem;
+      vertical-align: middle;
+    }
+
+    .pa-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .pa-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: lowercase;
+    }
+
+    .pa-badge.active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .pa-badge.ended {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .pa-badge.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .pa-badge.sent {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .pa-badge.failed {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      color: #475569;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .icon-btn:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .icon-btn.danger:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn-send {
+      background: linear-gradient(90deg, #6366f1, #818cf8);
+      color: #fff;
+      border: 0;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-send[disabled] {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .summary-chip {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #f8fafc;
+      padding: 10px;
+    }
+
+    .summary-chip .k {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: #64748b;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .summary-chip .v {
+      margin-top: 3px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .modal-content {
+      border-radius: 16px;
+      border: 0;
+    }
+
+    .modal-header {
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #334155;
+      font-size: 0.88rem;
+    }
+
+    .empty-row td {
+      text-align: center;
+      padding: 30px 10px;
+      color: #64748b;
+    }
+
+    @media (max-width: 992px) {
+      .stats-row,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pa-tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .pa-table thead {
+        display: none;
+      }
+
+      .pa-table,
+      .pa-table tbody,
+      .pa-table tr,
+      .pa-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .pa-table tr {
+        border: 1px solid #eef2f7;
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+
+      .pa-table td {
+        border: 0;
+        padding: 6px 4px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .pa-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #64748b;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="wrapper">
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <div id="sidebar-wrapper">
+    <div class="sidebar-heading d-flex justify-content-between align-items-center">
+      <div class="panel-brand">
+        <span class="panel-name" data-panel-name></span>
+        <small class="panel-mobile d-none" data-panel-mobile></small>
+      </div>
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarCloseBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="list-group list-group-flush">
+      <a href="admin-dashboard.html" class="list-group-item"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="admin-orders.html" class="list-group-item"><i class="bi bi-box-seam"></i> Orders</a>
+      <a href="admin-users.html" class="list-group-item"><i class="bi bi-people"></i> Users</a>
+      <a href="admin-payments.html" class="list-group-item"><i class="bi bi-wallet2"></i> Payments</a>
+      <a href="admin-cash-type.html" class="list-group-item"><i class="bi bi-cash-coin"></i> Cash Type</a>
+      <a href="admin-categories.html" class="list-group-item"><i class="bi bi-list-ul"></i> Categories</a>
+      <a href="admin-services.html" class="list-group-item"><i class="bi bi-gear"></i> Services</a>
+      <a href="admin-manual-services.html" class="list-group-item"><i class="bi bi-tools"></i> Manual Services</a>
+      <a href="admin-prizearena.html" class="list-group-item active"><i class="bi bi-trophy"></i> Prize Arena</a>
+      <a href="admin-broadcast.html" class="list-group-item"><i class="bi bi-megaphone"></i> Announcements</a>
+      <a href="admin-analytics.html" class="list-group-item"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+      <a href="admin-settings.html" class="list-group-item"><i class="bi bi-sliders"></i> Settings</a>
+      <a href="#" id="btnLogout" class="list-group-item text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
+
+  <div id="page-content-wrapper">
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <button class="btn btn-primary shadow-sm" id="menu-toggle"><i class="bi bi-list"></i> Menu</button>
+      <h4 class="fw-bold m-0">Prize Arena</h4>
+    </div>
+
+    <div class="pa-head">
+      <div>
+        <h2><i class="bi bi-trophy-fill"></i> Prize Pool Arena</h2>
+        <small>Create contests with reward service and track vendor cost on reward claims.</small>
+      </div>
+      <div class="pa-actions">
+        <button type="button" class="btn-settings" data-bs-toggle="modal" data-bs-target="#settingsModal">
+          <i class="bi bi-gear"></i> Settings
+        </button>
+        <button type="button" class="btn-new" data-bs-toggle="modal" data-bs-target="#contestModal" id="btnNewContest">
+          <i class="bi bi-plus-lg"></i> New Contest
+        </button>
+      </div>
+    </div>
+
+    <div class="pa-tabs" role="tablist" aria-label="Prize Arena admin tabs">
+      <button type="button" class="pa-tab active" data-pa-tab="contests">Contests</button>
+      <button type="button" class="pa-tab" data-pa-tab="winners">Winners</button>
+      <button type="button" class="pa-tab" data-pa-tab="orders">Orders</button>
+    </div>
+
+    <section id="paPaneContests" class="pa-pane">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="lbl">Total Earnings</div>
+          <div class="val" id="statEarnings">&#8377;0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Participants</div>
+          <div class="val" id="statParticipants">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Active Contests</div>
+          <div class="val" id="statActive">0</div>
+        </div>
+      </div>
+
+      <div class="pa-card">
+        <h6>Contests</h6>
+        <div class="table-responsive">
+          <table class="pa-table table table-hover align-middle mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th>Title</th>
+                <th>Prize</th>
+                <th>Fee</th>
+                <th>Winner Slots</th>
+                <th>Reward</th>
+                <th>Players</th>
+                <th>Ends</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="contestsBody">
+              <tr class="empty-row"><td colspan="9">Loading contests...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="paPaneWinners" class="pa-pane d-none">
+      <div class="pa-card">
+        <h6>Winners</h6>
+        <div class="table-responsive">
+          <table class="pa-table table table-hover align-middle mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th>Winner</th>
+                <th>Contest</th>
+                <th>Prize</th>
+                <th>Reward</th>
+                <th>Claim</th>
+                <th>Delivery</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody id="winnersBody">
+              <tr class="empty-row"><td colspan="7">Loading winners...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="paPaneOrders" class="pa-pane d-none">
+      <div class="pa-card">
+        <h6>Reward Orders</h6>
+        <div class="summary-grid">
+          <div class="summary-chip">
+            <div class="k">Orders</div>
+            <div class="v" id="ordersCount">0</div>
+          </div>
+          <div class="summary-chip">
+            <div class="k">Contest Charge (Total)</div>
+            <div class="v" id="ordersChargeTotal">&#8377;0.00</div>
+          </div>
+          <div class="summary-chip">
+            <div class="k">Vendor Cost (Sum)</div>
+            <div class="v" id="ordersVendorTotal">&#8377;0.00</div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="pa-table table table-hover align-middle mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th>Order ID</th>
+                <th>Contest</th>
+                <th>Winner</th>
+                <th>Link</th>
+                <th>Service</th>
+                <th>Qty</th>
+                <th>Total Charge</th>
+                <th>Vendor Cost</th>
+                <th>Mode</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody">
+              <tr class="empty-row"><td colspan="11">Loading orders...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="modal fade" id="contestModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contestModalTitle">New Contest</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="contestForm">
+        <div class="modal-body">
+          <input type="hidden" id="contestId" />
+
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input class="form-control" id="contestTitle" required placeholder="e.g. 1K Instagram Followers Giveaway">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Prize Label</label>
+            <input class="form-control" id="contestPrize" required placeholder="e.g. 1,000 followers">
+          </div>
+
+          <div class="row">
+            <div class="col-6 mb-3">
+              <label class="form-label">Entry Fee (&#8377;)</label>
+              <input type="number" min="0" step="0.01" class="form-control" id="contestFee" required>
+            </div>
+            <div class="col-6 mb-3">
+              <label class="form-label">Ends At</label>
+              <input type="datetime-local" class="form-control" id="contestEnds" required>
+            </div>
+            <div class="col-6 mb-3">
+              <label class="form-label">Winner Slots</label>
+              <input type="number" min="1" step="1" class="form-control" id="contestWinnerCount" required>
+            </div>
+            <div class="col-6 mb-3">
+              <label class="form-label">Reward Qty</label>
+              <input type="number" min="1" step="1" class="form-control" id="contestRewardQty" required>
+            </div>
+          </div>
+
+          <div class="mb-1">
+            <label class="form-label">Reward Service</label>
+            <select class="form-control" id="contestRewardService" required>
+              <option value="">Select reward service</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn-new">Save Contest</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="participantsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Participants &amp; Winners</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small mb-2" id="participantsContestTitle"></p>
+        <div id="participantsList">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Arena Settings</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="settingsForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Hero Pill</label>
+            <input class="form-control" id="settingHeroPill" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hero Title</label>
+            <input class="form-control" id="settingHeroTitle" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hero Subtitle</label>
+            <input class="form-control" id="settingHeroSubtitle" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn-new">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="admin-sync.js"></script>
+<script type="module" src="admin-prizearena.js"></script>
+</body>
+</html>
+

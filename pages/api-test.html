@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>API Tester – SMM Panel</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+    padding: 30px;
+  }
+  .box {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  }
+  h2 { margin-top: 0 }
+  label { font-weight: bold; display:block; margin-top:10px }
+  input, select, textarea, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  textarea { height: 120px }
+  button {
+    background: #3f51b5;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  pre {
+    background: #111;
+    color: #0f0;
+    padding: 15px;
+    border-radius: 8px;
+    overflow: auto;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+</style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>🧪 API Test Panel (Local / Production)</h2>
+
+  <label>API URL</label>
+  <input id="apiUrl" value="http://localhost:8888/api/api" />
+
+  <label>API Key</label>
+  <input id="apiKey" placeholder="sk_xxxxx" />
+
+  <label>Action</label>
+  <select id="action">
+    <option value="balance">balance</option>
+    <option value="services">services</option>
+    <option value="add">add (place order)</option>
+    <option value="status">status</option>
+  </select>
+
+  <div class="row">
+    <div>
+      <label>Service ID (for add)</label>
+      <input id="service" placeholder="123" />
+    </div>
+    <div>
+      <label>Quantity</label>
+      <input id="quantity" placeholder="1000" />
+    </div>
+  </div>
+
+  <label>Link (for add)</label>
+  <input id="link" placeholder="https://instagram.com/..." />
+
+  <label>Order ID (for status)</label>
+  <input id="orderId" placeholder="api_12345" />
+
+  <label>Request Type</label>
+  <select id="reqType">
+    <option value="form">x-www-form-urlencoded (SMM standard)</option>
+    <option value="json">JSON</option>
+  </select>
+
+  <button onclick="callApi()">🚀 Call API</button>
+
+  <h3>📤 Raw Response</h3>
+  <pre id="output">Waiting...</pre>
+</div>
+
+<script>
+async function callApi() {
+  const url = document.getElementById("apiUrl").value.trim();
+  const key = document.getElementById("apiKey").value.trim();
+  const action = document.getElementById("action").value;
+  const type = document.getElementById("reqType").value;
+
+  const payload = {
+    key,
+    action
+  };
+
+  if (action === "add") {
+    payload.service = document.getElementById("service").value;
+    payload.quantity = document.getElementById("quantity").value;
+    payload.link = document.getElementById("link").value;
+  }
+
+  if (action === "status") {
+    payload.order = document.getElementById("orderId").value;
+  }
+
+  let options = { method: "POST", headers: {} };
+
+  if (type === "json") {
+    options.headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify(payload);
+  } else {
+    options.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    options.body = new URLSearchParams(payload).toString();
+  }
+
+  const out = document.getElementById("output");
+  out.textContent = "Loading...";
+
+  try {
+    const res = await fetch(url, options);
+    const text = await res.text();
+
+    // try JSON pretty
+    try {
+      out.textContent = JSON.stringify(JSON.parse(text), null, 2);
+    } catch {
+      out.textContent = text;
+    }
+  } catch (err) {
+    out.textContent = "ERROR: " + err.message;
+  }
+}
+</script>
+
+</body>
+</html>

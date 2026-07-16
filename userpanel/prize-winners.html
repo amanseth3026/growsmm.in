@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contest Winners</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="broadcasts-widget.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    .winners-hero {
+      background: linear-gradient(135deg, #2563eb 0%, #4338ca 56%, #7c3aed 100%);
+      color: #fff;
+      border-radius: 20px;
+      padding: 24px 24px 20px;
+      box-shadow: 0 18px 44px rgba(37, 99, 235, 0.26);
+      margin-bottom: 14px;
+    }
+
+    .winners-hero .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+
+    .winners-hero h2 {
+      margin: 0 0 8px;
+      font-size: 1.72rem;
+      font-weight: 800;
+      line-height: 1.18;
+    }
+
+    .winners-hero p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 0.9rem;
+    }
+
+    .winners-back {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .winners-shell {
+      background: #eef2f8;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .leaderboard-headline h4 {
+      margin: 0;
+      color: #1e293b;
+      font-size: 1.85rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .leaderboard-headline h4 i {
+      color: #eab308;
+      font-size: 1.08rem;
+    }
+
+    .leaderboard-headline p {
+      margin: 2px 0 12px;
+      color: #64748b;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .winner-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      background: #d8deec;
+      border-radius: 13px;
+      padding: 6px;
+      margin-bottom: 12px;
+    }
+
+    .winner-tab {
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #475569;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 9px 8px;
+      transition: all 0.15s ease;
+    }
+
+    .winner-tab.active {
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
+    }
+
+    .winners-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      color: #475569;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .winners-top {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .winner-top-card {
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 16px;
+      background: #fff;
+      padding: 14px 10px;
+      text-align: center;
+      display: grid;
+      gap: 7px;
+    }
+
+    .winner-trophy {
+      color: #eab308;
+      font-size: 0.95rem;
+    }
+
+    .winner-rank-pill {
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1e3a8a;
+      padding: 4px 8px;
+      width: fit-content;
+      margin: 0 auto;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .winner-avatar {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: 2px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.18rem;
+      font-weight: 800;
+      overflow: hidden;
+    }
+
+    .winner-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .winner-user {
+      color: #0f172a;
+      font-size: 0.98rem;
+      font-weight: 800;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .winner-note {
+      color: #64748b;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .winner-prize {
+      color: #4f46e5;
+      font-size: 0.88rem;
+      font-weight: 800;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .winner-status {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-radius: 999px;
+      padding: 4px 8px;
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    .winner-status.claimed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .winner-status.unclaimed {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .winner-status.expired {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .winners-table {
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      border-radius: 13px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .winners-row {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1fr) 92px;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-top: 1px solid #eef2f7;
+    }
+
+    .winners-row.head {
+      background: #f1f5f9;
+      border-top: 0;
+      color: #475569;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .winners-row .rank {
+      color: #1e3a8a;
+      font-weight: 800;
+      font-size: 0.84rem;
+    }
+
+    .winners-row .user {
+      color: #0f172a;
+      font-size: 0.88rem;
+      font-weight: 700;
+      line-height: 1.2;
+      word-break: break-word;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .winner-avatar-sm {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: 1px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 800;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .winner-avatar-sm img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .user-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .winners-row .prize {
+      color: #1e40af;
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .winners-row .status {
+      justify-self: end;
+      text-align: right;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 22px 10px;
+      border: 1px dashed rgba(148, 163, 184, 0.44);
+      border-radius: 12px;
+      color: #64748b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      background: #f8fafc;
+    }
+
+    @media (max-width: 860px) {
+      .winners-top {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .winners-hero {
+        padding: 20px 16px 16px;
+      }
+
+      .winners-hero h2 {
+        font-size: 1.42rem;
+      }
+
+      .winners-row {
+        grid-template-columns: 58px minmax(0, 1fr);
+      }
+
+      .winners-row.head {
+        display: none;
+      }
+
+      .winners-row .prize {
+        grid-column: 1 / -1;
+      }
+
+      .winners-row .status {
+        justify-self: start;
+        text-align: left;
+      }
+
+      .winners-row .user {
+        grid-column: 2 / -1;
+      }
+    }
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>Contest Winners</h5>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge badge-balance"><i class="bi bi-wallet2"></i> <span id="userBalance">&#8377;0.00</span></span>
+      </div>
+    </div>
+
+    <div id="broadcastTicker" class="broadcast-ticker-wrap mb-3"></div>
+
+    <section class="winners-hero">
+      <span class="pill"><i class="bi bi-trophy-fill"></i> Prize Arena Winners</span>
+      <h2 id="contestTitle">Contest Winners</h2>
+      <p id="contestMeta">Loading contest details...</p>
+      <a href="prizearena.html?tab=past" class="winners-back"><i class="bi bi-arrow-left"></i> Back to Past Tournament</a>
+    </section>
+
+    <section class="winners-shell">
+      <div class="leaderboard-headline">
+        <h4><i class="bi bi-trophy-fill"></i> Leaderboard</h4>
+        <p>Top winners by contest prizes</p>
+      </div>
+      <div class="winner-tabs" role="tablist" aria-label="Winner filters">
+        <button type="button" class="winner-tab active" data-winner-filter="all">All</button>
+        <button type="button" class="winner-tab" data-winner-filter="claimed">Claimed</button>
+        <button type="button" class="winner-tab" data-winner-filter="unclaimed">Unclaimed</button>
+      </div>
+      <div class="winners-head">
+        <span id="winnerCount">Winners: 0</span>
+        <span id="updatedAt">Updating...</span>
+      </div>
+      <div id="winnersList">
+        <div class="empty-state">Loading winners...</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="panel-theme.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="broadcasts-widget.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script type="module" src="prize-winners.js"></script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>

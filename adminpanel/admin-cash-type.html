@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Cash Type</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<div id="wrapper">
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <div id="sidebar-wrapper">
+        <div class="sidebar-heading d-flex justify-content-between align-items-center">
+        <div class="panel-brand">
+          <span class="panel-name" data-panel-name></span>
+          <small class="panel-mobile d-none" data-panel-mobile></small>
+        </div>
+        <button class="btn btn-sm btn-light d-lg-none" id="sidebarCloseBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+        <div class="list-group list-group-flush">
+      <a href="admin-dashboard.html" class="list-group-item"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="admin-orders.html" class="list-group-item"><i class="bi bi-box-seam"></i> Orders</a>
+      <a href="admin-users.html" class="list-group-item"><i class="bi bi-people"></i> Users</a>
+      <a href="admin-payments.html" class="list-group-item"><i class="bi bi-wallet2"></i> Payments</a>
+      <a href="admin-cash-type.html" class="list-group-item active"><i class="bi bi-cash-coin"></i> Cash Type</a>
+      <a href="admin-categories.html" class="list-group-item"><i class="bi bi-list-ul"></i> Categories</a>
+      <a href="admin-services.html" class="list-group-item"><i class="bi bi-gear"></i> Services</a>
+      <a href="admin-manual-services.html" class="list-group-item"><i class="bi bi-tools"></i> Manual Services</a>
+      <a href="admin-broadcast.html" class="list-group-item"><i class="bi bi-megaphone"></i> Announcements</a>
+      <a href="admin-analytics.html" class="list-group-item"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+      <a href="admin-settings.html" class="list-group-item"><i class="bi bi-sliders"></i> Settings</a>
+      <a href="#" id="btnLogout" class="list-group-item text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
+
+  <div id="page-content-wrapper">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <button class="btn btn-primary shadow-sm" id="menu-toggle"><i class="bi bi-list"></i> Menu</button>
+        <h4 class="fw-bold m-0">Cash Type Settings</h4>
+    </div>
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <form id="cashTypeForm">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold mb-1">Manual Method</h6>
+              <p class="text-muted small mb-0">Manual QR + verification ke liye UPI + Gmail settings.</p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Manual UPI ID</label>
+              <input id="manualUpiId" type="text" class="form-control" placeholder="manualupi@bank" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Manual UPI Name</label>
+              <input id="manualUpiName" type="text" class="form-control" placeholder="Manual Business Name">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Manual Gmail IMAP User</label>
+              <input id="manualGmailImapUser" type="email" class="form-control" placeholder="example@gmail.com">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Manual Gmail IMAP App Password</label>
+              <div class="input-group">
+                <input id="manualGmailImapAppPassword" type="password" class="form-control" placeholder="App password">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="toggleManualImapPassword"
+                  data-password-toggle="true"
+                  data-password-target="manualGmailImapAppPassword"
+                  aria-label="Toggle manual Gmail password visibility"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <small class="text-muted">Use Gmail App Password (not your login password).</small>
+            </div>
+
+            <div class="col-12 pt-2">
+              <hr class="my-2">
+              <h6 class="fw-bold mb-1">Auto Method</h6>
+              <p class="text-muted small mb-0">Auto QR + Gmail verification ke liye settings.</p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Auto UPI ID</label>
+              <input id="autoUpiId" type="text" class="form-control" placeholder="autoupi@bank" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Auto UPI Name</label>
+              <input id="autoUpiName" type="text" class="form-control" placeholder="Auto Business Name">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Gmail IMAP User</label>
+              <input id="autoGmailImapUser" type="email" class="form-control" placeholder="example@gmail.com">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Gmail IMAP App Password</label>
+              <div class="input-group">
+                <input id="autoGmailImapAppPassword" type="password" class="form-control" placeholder="App password">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="toggleImapPassword"
+                  data-password-toggle="true"
+                  data-password-target="autoGmailImapAppPassword"
+                  aria-label="Toggle auto Gmail password visibility"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <small class="text-muted">Use Gmail App Password (not your login password).</small>
+            </div>
+
+          </div>
+
+          <div class="d-flex align-items-center gap-3 mt-4">
+            <button id="btnSaveSettings" type="submit" class="btn btn-primary px-4">Save Settings</button>
+            <span id="saveStatus" class="small text-muted"></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="admin-cash-type.js"></script>
+
+<script type="module" src="admin-sync.js"></script>
+</body>
+</html>
+
+
+
+

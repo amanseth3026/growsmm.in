@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leaderboard</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="broadcasts-widget.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    .leaderboard-shell {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 18px;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+      padding: 16px;
+    }
+
+    .leaderboard-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .leaderboard-title h4 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .leaderboard-title h4 i {
+      color: #eab308;
+      font-size: 1.15rem;
+    }
+
+    .leaderboard-title small {
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.84rem;
+    }
+
+    .leaderboard-tabs {
+      display: inline-flex;
+      gap: 8px;
+      background: #eef2ff;
+      border: 1px solid #dbeafe;
+      border-radius: 11px;
+      padding: 4px;
+    }
+
+    .leaderboard-tab {
+      border: none;
+      background: transparent;
+      color: #475569;
+      border-radius: 8px;
+      padding: 7px 11px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .leaderboard-tab.active {
+      background: linear-gradient(90deg, #2563eb, #1d4ed8);
+      color: #fff;
+    }
+
+    .leaderboard-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .leaderboard-top3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .leaderboard-podium-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      padding: 14px 12px;
+      text-align: center;
+      display: grid;
+      gap: 8px;
+    }
+
+    .leaderboard-podium-icon {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .leaderboard-podium-card.rank-1 .leaderboard-podium-icon { color: #eab308; }
+    .leaderboard-podium-card.rank-2 .leaderboard-podium-icon { color: #94a3b8; }
+    .leaderboard-podium-card.rank-3 .leaderboard-podium-icon { color: #f97316; }
+
+    .leaderboard-avatar {
+      width: 66px;
+      height: 66px;
+      margin: 0 auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .leaderboard-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .leaderboard-podium-card.rank-1 .leaderboard-avatar { background: linear-gradient(135deg, #4338ca, #ef4444); }
+    .leaderboard-podium-card.rank-2 .leaderboard-avatar { background: linear-gradient(135deg, #db2777, #4338ca); }
+    .leaderboard-podium-card.rank-3 .leaderboard-avatar { background: linear-gradient(135deg, #f43f5e, #dc2626); }
+
+    .leaderboard-podium-rank {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #64748b;
+      line-height: 1;
+    }
+
+    .leaderboard-podium-name {
+      margin: 0;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .leaderboard-podium-orders {
+      margin: 0;
+      color: #64748b;
+      font-size: 0.74rem;
+    }
+
+    .leaderboard-podium-amount {
+      margin: 0;
+      color: #6366f1;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .leaderboard-rest {
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .leaderboard-rest-head {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) 110px;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 14px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .leaderboard-rest-row {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) 110px;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 14px;
+      border-top: 1px solid #eef2f7;
+    }
+
+    .leaderboard-rest-rank {
+      width: fit-content;
+      min-width: 46px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #1e3a8a;
+      background: #dbeafe;
+    }
+
+    .leaderboard-rest-user {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .leaderboard-avatar-sm {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+      border: 1px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      flex: 0 0 auto;
+      line-height: 1;
+    }
+
+    .leaderboard-avatar-sm img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .leaderboard-rest-user strong {
+      display: block;
+      color: #0f172a;
+      font-size: 0.92rem;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .leaderboard-rest-user span {
+      display: block;
+      color: #64748b;
+      font-size: 0.73rem;
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .leaderboard-rest-amount {
+      justify-self: end;
+      text-align: right;
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .leaderboard-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      color: #64748b;
+      font-size: 0.74rem;
+    }
+
+    .leaderboard-state {
+      text-align: center;
+      padding: 16px 10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(148, 163, 184, 0.34);
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 820px) {
+      .leaderboard-top3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .leaderboard-shell {
+        padding: 12px;
+        border-radius: 16px;
+      }
+
+      .leaderboard-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .leaderboard-tabs {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .leaderboard-tab {
+        flex: 1 1 0;
+        text-align: center;
+      }
+
+      .leaderboard-avatar {
+        width: 58px;
+        height: 58px;
+        font-size: 1.25rem;
+      }
+
+      .leaderboard-podium-amount {
+        font-size: 1.7rem;
+      }
+
+      .leaderboard-rest-head,
+      .leaderboard-rest-row {
+        grid-template-columns: 64px minmax(0, 1fr) 90px;
+        padding: 10px;
+      }
+
+      .leaderboard-rest-head {
+        font-size: 0.67rem;
+      }
+
+      .leaderboard-rest-amount,
+      .leaderboard-meta {
+        font-size: 0.72rem;
+      }
+    }
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li class="active"><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>Leaderboard</h5>
+          <small>Top spenders in panel</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge badge-balance"><i class="bi bi-wallet2"></i> <span id="userBalance"></span></span>
+      </div>
+    </div>
+
+    <div id="broadcastTicker" class="broadcast-ticker-wrap mb-3"></div>
+
+    <section class="leaderboard-shell" aria-labelledby="leaderboardTitle">
+      <div class="leaderboard-head">
+        <div class="leaderboard-title">
+          <h4 id="leaderboardTitle"><i class="bi bi-trophy-fill"></i> Leaderboard</h4>
+          <small>Top spenders by total buy amount</small>
+        </div>
+
+        <div class="leaderboard-tabs" role="tablist" aria-label="Leaderboard tabs">
+          <button type="button" class="leaderboard-tab active" data-leaderboard-tab="daily">Daily</button>
+          <button type="button" class="leaderboard-tab" data-leaderboard-tab="weekly">Weekly</button>
+          <button type="button" class="leaderboard-tab" data-leaderboard-tab="monthly">Monthly</button>
+        </div>
+      </div>
+
+      <div id="leaderboardList" class="leaderboard-list">
+        <div class="leaderboard-state">Loading leaderboard...</div>
+      </div>
+
+      <div class="leaderboard-meta">
+        <span id="leaderboardRange">Today</span>
+        <span id="leaderboardUpdated">Updating...</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="panel-theme.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="broadcasts-widget.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script type="module" src="leaderboard.js"></script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>
+
+
+

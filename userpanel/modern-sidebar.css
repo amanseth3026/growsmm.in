@@ -1,0 +1,86 @@
+/* ============ Modern Sidebar (dark glass, wallet card, icon boxes) ============ */
+body.panel-theme .sidebar{
+  background:linear-gradient(180deg,#0d0d1a 0%,#0a0a14 100%)!important;
+  border-right:1px solid rgba(255,255,255,.06)!important;
+  padding:0!important;
+  display:flex;flex-direction:column;
+}
+body.panel-theme .sidebar .logo{
+  padding:18px 18px 14px!important;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+body.panel-theme .sidebar .logo .logo-left{display:flex;align-items:center;gap:10px;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:18px}
+body.panel-theme .sidebar .logo img{height:36px;width:36px;border-radius:10px;background:#fff;padding:4px}
+body.panel-theme .sidebar .sidebar-close{
+  width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;cursor:pointer;transition:.2s;
+}
+body.panel-theme .sidebar .sidebar-close:hover{background:rgba(255,255,255,.12)}
+
+/* Wallet card */
+body.panel-theme .wallet-card{
+  margin:16px 14px 8px;padding:16px;border-radius:18px;
+  background:linear-gradient(180deg,rgba(30,30,45,.9),rgba(20,20,32,.9));
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 8px 24px -12px rgba(0,0,0,.6);
+}
+body.panel-theme .wallet-card .wc-label{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600
+}
+body.panel-theme .wallet-card .wc-amount{
+  font-size:26px;font-weight:800;color:#fff;font-family:'Space Grotesk',sans-serif;margin:4px 0 12px;letter-spacing:-.02em
+}
+body.panel-theme .wallet-card .wc-btn{
+  display:block;text-align:center;padding:11px 14px;border-radius:12px;
+  background:linear-gradient(90deg,#7c5cff,#ff4ecd);
+  color:#fff!important;font-weight:700;font-size:14px;text-decoration:none;
+  box-shadow:0 8px 22px -6px rgba(124,92,255,.5);transition:.2s;
+}
+body.panel-theme .wallet-card .wc-btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+
+/* Menu */
+body.panel-theme .sidebar-menu{padding:8px 10px 20px!important;margin:0;list-style:none;overflow-y:auto;flex:1}
+body.panel-theme .sidebar-menu li{margin:2px 0}
+body.panel-theme .sidebar-menu a{
+  display:flex!important;align-items:center;gap:12px;
+  padding:10px 12px!important;margin:0!important;
+  border-radius:14px!important;
+  color:rgba(255,255,255,.78)!important;font-weight:500;font-size:14.5px;
+  text-decoration:none;transition:.2s;background:transparent!important;
+}
+body.panel-theme .sidebar-menu a:hover{background:rgba(255,255,255,.05)!important;color:#fff!important}
+body.panel-theme .sidebar-menu a i{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  font-size:14px;flex-shrink:0;
+  background:rgba(255,255,255,.06);color:#fff;
+  transition:.2s;
+}
+/* Colored icon tiles per menu item (via nth-child hues) */
+body.panel-theme .sidebar-menu li:nth-child(1) a i{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(2) a i{background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(3) a i{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(4) a i{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(5) a i{background:linear-gradient(135deg,#eab308,#a16207);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(6) a i{background:linear-gradient(135deg,#ec4899,#be185d);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(7) a i{background:linear-gradient(135deg,#f97316,#c2410c);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(8) a i{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(9) a i{background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(10) a i{background:linear-gradient(135deg,#06b6d4,#0e7490);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(11) a i{background:linear-gradient(135deg,#14b8a6,#0f766e);color:#fff}
+body.panel-theme .sidebar-menu li:nth-child(12) a i{background:linear-gradient(135deg,#64748b,#334155);color:#fff}
+
+/* Active state — full gradient pill */
+body.panel-theme .sidebar-menu a.active{
+  background:linear-gradient(90deg,#7c5cff 0%,#a855f7 55%,#ff4ecd 100%)!important;
+  color:#fff!important;
+  box-shadow:0 10px 24px -10px rgba(124,92,255,.55),inset 0 1px 0 rgba(255,255,255,.15);
+  position:relative;
+}
+body.panel-theme .sidebar-menu a.active i{
+  background:rgba(255,255,255,.18)!important;color:#fff!important;
+}
+
+/* Scrollbar */
+body.panel-theme .sidebar-menu::-webkit-scrollbar{width:6px}
+body.panel-theme .sidebar-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:6px}

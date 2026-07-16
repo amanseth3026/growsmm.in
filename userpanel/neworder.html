@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New Order</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="broadcasts-widget.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    .order-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .custom-dd-wrapper { position: relative; margin-bottom: 1rem; }
+    .custom-dd-btn {
+      width: 100%;
+      padding: 12px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+    .custom-dd-btn:hover { border-color: #cbd5e1; }
+    .custom-dd-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      margin-top: 5px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      z-index: 1000;
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 5px;
+    }
+    .custom-dd-item {
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .custom-dd-item:hover { background: #f8fafc; color: #0d6efd; }
+
+    .avg-time-box {
+      background: #e3f2fd;
+      color: #0d47a1;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #serviceDesc.service-note {
+      background: #fff7ed;
+      border-left: 6px solid #e74c3c;
+      color: #1f2937;
+      padding: 14px 16px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    #serviceDesc.service-note ul { padding-left: 1.05rem; margin: 0 0 4px 0; }
+    #serviceDesc.service-note li { margin-bottom: 6px; font-size: 13px; }
+
+    .link-hint {
+      background: #eef6ff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #475569;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .btn-place-order {
+      background: #0d6efd;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      width: 100%;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 8px 15px rgba(13, 110, 253, 0.25);
+    }
+
+    .btn-place-order:hover { background: #0b5ed7; }
+
+    .community-offer-card {
+      background: linear-gradient(135deg, #1ea463 0%, #15985b 60%, #0f8b53 100%);
+      border-radius: 13px;
+      padding: 12px 13px;
+      margin-bottom: 10px;
+      box-shadow: 0 8px 18px rgba(21, 136, 84, 0.23);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .community-offer-title {
+      margin: 0 0 8px;
+      font-size: 0.96rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .community-offer-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 2px;
+      min-height: 34px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #0f8b53;
+      font-weight: 800;
+      font-size: 0.86rem;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 6px 12px rgba(15, 23, 42, 0.16);
+    }
+
+    .community-offer-btn:hover {
+      color: #0c7446;
+      background: #f8fffc;
+    }
+
+    #broadcastTicker .broadcast-left {
+      font-size: 0.62rem;
+      gap: 0;
+    }
+
+    #broadcastTicker .broadcast-left .tag {
+      display: none;
+    }
+
+    #broadcastTicker .broadcast-text {
+      font-size: 0.8rem;
+    }
+
+    #broadcastTicker .broadcast-cta {
+      font-size: 0.7rem;
+      padding: 3px 10px;
+    }
+
+/* Main Card */
+body.panel-theme .top2-navbar {
+  width: 100%;
+  max-width: 620px;
+  margin: 22px auto 24px;
+  padding: 14px 18px 0 20px;
+  border-radius: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 14px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 82% 50%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 26%, transparent 46%),
+    linear-gradient(90deg, #0f2e8f 0%, #1c49be 45%, #3177f6 78%, #67b9ff 100%);
+  box-shadow: 0 18px 36px rgba(30, 64, 175, 0.24);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 134px;
+}
+
+body.panel-theme .top2-navbar::before {
+  content: "";
+  position: absolute;
+  right: -68px;
+  top: -54px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.12) 22%, rgba(255, 255, 255, 0) 66%);
+  pointer-events: none;
+}
+
+body.panel-theme .top2-navbar::after {
+  content: "";
+  position: absolute;
+  right: 96px;
+  bottom: -60px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(103, 185, 255, 0.22), rgba(103, 185, 255, 0));
+  pointer-events: none;
+}
+
+body.panel-theme .text-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 2;
+  flex: 1 1 0;
+  min-width: 0;
+  align-self: center;
+  padding-bottom: 12px;
+}
+
+body.panel-theme .top2-navbar small {
+  display: block;
+  font-size: clamp(1.02rem, 2.2vw, 1.15rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+body.panel-theme .orders {
+  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+body.panel-theme .welcome {
+  font-size: clamp(0.88rem, 1.5vw, 0.98rem);
+  font-weight: 600;
+  opacity: 0.95;
+  line-height: 1.2;
+}
+
+body.panel-theme .top2-navbar span {
+  font-weight: 800;
+}
+
+body.panel-theme .auth-bnr-img {
+  height: 116px;
+  width: min(40vw, 200px);
+  object-fit: contain;
+  object-position: center bottom;
+  z-index: 2;
+  flex: 0 0 auto;
+  align-self: flex-end;
+  filter: drop-shadow(0 14px 18px rgba(17, 24, 39, 0.22));
+  transition: transform 0.3s ease;
+}
+
+body.panel-theme .top2-navbar:hover .auth-bnr-img {
+  transform: translateY(-1px) scale(1.03);
+}
+
+@media (max-width: 768px) {
+  body.panel-theme .top2-navbar {
+    max-width: 100%;
+    padding: 12px 16px 0 18px;
+    min-height: 122px;
+  }
+
+  body.panel-theme .text-content {
+    padding-bottom: 10px;
+  }
+
+  body.panel-theme .auth-bnr-img {
+    height: 98px;
+    width: min(34vw, 160px);
+  }
+}
+
+@media (max-width: 480px) {
+  body.panel-theme .top2-navbar {
+    gap: 10px;
+    padding: 12px 12px 0 14px;
+    min-height: 112px;
+    border-radius: 20px;
+  }
+
+  body.panel-theme .text-content {
+    padding-bottom: 8px;
+  }
+
+  body.panel-theme .auth-bnr-img {
+    height: 84px;
+    width: min(32vw, 120px);
+    transform: translateY(0);
+  }
+
+  body.panel-theme .top2-navbar small {
+    font-size: 0.96rem;
+  }
+
+  body.panel-theme .orders {
+    font-size: 0.9rem;
+  }
+
+  body.panel-theme .welcome {
+    font-size: 0.84rem;
+  }
+}
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li class="active"><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>New Order</h5>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+        <span class="badge badge-balance"><i class="bi bi-wallet2"></i> <span id="userBalance"></span></span>
+        
+      </div>
+    </div>
+
+      <div class="top2-navbar"> 
+        <div class="text-content">
+          <small>Username - <span id="userName"></span></small>
+          <div class="orders">Your Orders: <span id="userOrders"></span></div>
+          <div class="welcome">Welcome To <span data-panel-name></span></div>
+       </div>
+
+        <img class="auth-bnr-img" src="https://i.23robo.info/projects/worldofsmm/img/bnr_girl.webp" alt="banner">
+    </div>
+
+    <section id="communityOfferCard" class="community-offer-card d-none" aria-label="Community Offers">
+      <h3 class="community-offer-title">Join our community for latest offers, updates & special deals!</h3>
+      <a
+        href="#"
+        data-community-link
+        target="_blank"
+        rel="noopener"
+        id="communityOfferBtn"
+        class="community-offer-btn d-none"
+      >
+        Join Community
+      </a>
+    </section>
+
+    <div id="broadcastTicker" class="broadcast-ticker-wrap mb-3"></div>
+
+    <div class="order-card">
+      <h4 class="mb-4"><i class="bi bi-plus-circle-fill text-primary"></i> Place New Order</h4>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold small text-muted">Search Service</label>
+        <input type="text" id="svcSearch" class="form-control" placeholder="Search any service...">
+        <div id="svcSearchResults" style="display:none; max-height:300px; overflow:auto;" class="border rounded bg-white shadow-sm mt-1"></div>
+      </div>
+
+      <label class="form-label fw-semibold small text-muted">Category</label>
+      <div class="custom-dd-wrapper" id="catWrapper">
+        <div class="custom-dd-btn" id="catBtn">
+          <span><i class="bi bi-grid-fill me-2 text-muted"></i>Select Category</span>
+          <i class="bi bi-chevron-down small"></i>
+        </div>
+        <div class="custom-dd-list" id="catList">
+          <div id="catItems"></div>
+        </div>
+      </div>
+
+      <label class="form-label fw-semibold small text-muted">Service</label>
+      <div class="custom-dd-wrapper" id="svcWrapper">
+        <div class="custom-dd-btn" id="svcBtn" style="opacity: 0.7; pointer-events: none;">
+          <span>Select Service</span>
+          <i class="bi bi-chevron-down small"></i>
+        </div>
+        <div class="custom-dd-list" id="svcList">
+          <div id="svcItems"></div>
+        </div>
+      </div>
+
+      <div class="mb-3 p-3 bg-light rounded border text-muted small" id="serviceDesc" style="max-height:800px; overflow:hidden; display:none; transition:height 160ms ease;"></div>
+
+      <div id="avgTimeDisplay" class="avg-time-box">
+        <i class="bi bi-stopwatch-fill fs-5"></i>
+        <div>
+          <span class="d-block fw-bold" style="font-size: 0.7rem; opacity: 0.7;">AVERAGE TIME</span>
+          <span id="avgTimeValue" class="fw-bold">Calculating...</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="link-hint" aria-hidden="true">Account must be public</div>
+        <label class="form-label fw-semibold small text-muted">Link <span class="text-danger">*</span></label>
+        <input id="orderLink" class="form-control" placeholder="https://..." required>
+      </div>
+
+      <div class="mb-3" id="commentsArea" style="display: none;">
+        <label class="form-label fw-semibold small text-muted">Comments (One per line)</label>
+        <textarea id="orderComments" class="form-control" rows="6" placeholder="..."></textarea>
+        <small id="commentsCountInfo" class="text-primary fw-bold" style="font-size: 11px;">0 comments</small>
+      </div>
+
+      <div class="row g-2 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold small text-muted">Quantity</label>
+          <input id="orderQty" type="number" class="form-control" placeholder="0">
+          <small id="qtyHint" class="text-muted" style="font-size: 11px;"></small>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold small text-muted">Price</label>
+          <input id="orderPrice" class="form-control bg-light fw-bold text-primary" readonly placeholder="&#8377;0">
+        </div>
+      </div>
+
+      <button id="btnPlaceOrder" class="btn-place-order" type="button">PLACE ORDER</button>
+    </div>
+  </main>
+
+  <div class="modal fade" id="orderSuccessModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 p-4">
+        <div class="text-center mb-3">
+          <i class="bi bi-check-circle-fill text-success display-1"></i>
+          <h4 class="mt-2 fw-bold">Order Success!</h4>
+        </div>
+
+        <div class="bg-light p-3 rounded border mb-3 small">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Order ID:</span>
+            <span id="osOrderId" class="fw-bold text-dark"></span>
+          </div>
+          <div class="mb-2">
+            <span class="text-muted d-block">Service:</span>
+            <span id="osServiceName" class="fw-bold text-dark text-break"></span>
+          </div>
+          <div class="mb-2">
+            <span class="text-muted d-block">Link:</span>
+            <span id="osLink" class="text-primary text-break"></span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Quantity:</span>
+            <span id="osQty" class="fw-bold"></span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Charge:</span>
+            <span id="osCharge" class="fw-bold text-danger"></span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Available Balance:</span>
+            <span id="osBalance" class="fw-bold text-success"></span>
+          </div>
+        </div>
+
+        <button class="btn btn-dark w-100" onclick="location.reload()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="panel-theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script type="module" src="broadcasts-widget.js"></script>
+  <script type="module" src="neworder.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script>
+    (function () {
+      const card = document.getElementById("communityOfferCard");
+      const btn = document.getElementById("communityOfferBtn");
+      if (!card || !btn) return;
+
+      const syncCardVisibility = function () {
+        const href = String(btn.getAttribute("href") || "").trim();
+        const hasRealLink = href && href !== "#";
+        const visible = hasRealLink && !btn.classList.contains("d-none");
+        card.classList.toggle("d-none", !visible);
+      };
+
+      syncCardVisibility();
+
+      const observer = new MutationObserver(syncCardVisibility);
+      observer.observe(btn, {
+        attributes: true,
+        attributeFilter: ["class", "href"]
+      });
+    })();
+  </script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>
+
+
+
+
+

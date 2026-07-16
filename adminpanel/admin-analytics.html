@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Super Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+
+<style>
+  :root {
+    --primary: #4f46e5;
+    --bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-light: #6b7280;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+  }
+
+  body[data-theme="classic"] {
+    --primary: #0d6efd;
+    --bg: #f4f6f9;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-light: #6b7280;
+    --border: #e0e0e0;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #f59e0b;
+    --info: #0d6efd;
+  }
+
+  body[data-theme="ocean"] {
+    --primary: #0ea5e9;
+    --bg: #eef5fb;
+    --card-bg: #ffffff;
+    --text-main: #1f2a37;
+    --text-light: #4b6076;
+    --border: #d6e5f3;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #0ea5e9;
+  }
+
+  body[data-theme="forest"] {
+    --primary: #16a34a;
+    --bg: #f1f8f3;
+    --card-bg: #ffffff;
+    --text-main: #1f3b2b;
+    --text-light: #4d6b59;
+    --border: #d8eadf;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #f59e0b;
+    --info: #16a34a;
+  }
+
+  body[data-theme="sunset"] {
+    --primary: #f97316;
+    --bg: #fff5f1;
+    --card-bg: #ffffff;
+    --text-main: #3a2a25;
+    --text-light: #6b4d45;
+    --border: #f2d7ce;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #f97316;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; color: var(--text-main); }
+  
+  .container { max-width: 1400px; margin: auto; }
+  
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px; }
+  .header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+  
+  /* Controls (Filters) - UPDATED FOR DATE PICKER */
+  .controls { 
+      display: flex; gap: 10px; background: var(--card-bg); padding: 10px; border-radius: 8px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-wrap: wrap; 
+  }
+  .controls input[type="date"], .controls select { 
+      border: 1px solid var(--border); padding: 8px; border-radius: 6px; outline: none; font-family: inherit;
+  }
+  .btn { 
+      background: var(--primary); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; 
+      cursor: pointer; font-weight: 500; transition: 0.2s;
+  }
+  .btn:hover { opacity: 0.9; }
+
+  /* Stats Grid */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 24px; }
+  .card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+  
+  .stat-label { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 5px; }
+  .stat-value { font-size: 24px; font-weight: 700; color: var(--text-main); }
+  
+  /* Colors for Stats */
+  .c-blue { color: var(--info); }
+  .c-green { color: var(--success); }
+  .c-red { color: var(--danger); }
+  .c-orange { color: var(--warning); }
+
+  /* Chart */
+  .chart-section { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 24px; height: 350px; border: 1px solid var(--border); }
+
+  /* Tables */
+  .table-card { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+  .table-container { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: #f9fafb; padding: 12px; font-size: 12px; color: var(--text-light); text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; white-space: nowrap; }
+  .user-link { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; }
+  .user-link:hover { text-decoration: underline; }
+
+  /* Modal */
+  .modal { 
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); 
+    display: none; 
+    align-items: center; justify-content: center; z-index: 999; 
+  }
+  .modal.active { display: flex; }
+  .modal-box { 
+    background: #fff; width: 95%; max-width: 1000px; max-height: 90vh; 
+    border-radius: 12px; padding: 20px; display: flex; flex-direction: column; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+  .modal-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+  .modal-body { overflow-y: auto; }
+  .summary-bar { background: #f0fdf4; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: flex; gap: 20px; font-size: 14px; border: 1px solid #dcfce7; }
+  
+  .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; display: none; margin-left: 10px; }
+  .loader.show { display: inline-block; }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+</head>
+
+<body>
+
+  <div id="wrapper">
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <div id="sidebar-wrapper">
+        <div class="sidebar-heading d-flex justify-content-between align-items-center">
+        <div class="panel-brand">
+          <span class="panel-name" data-panel-name></span>
+          <small class="panel-mobile d-none" data-panel-mobile></small>
+        </div>
+        <button class="btn btn-sm btn-light d-lg-none" id="sidebarCloseBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+        <div class="list-group list-group-flush">
+      <a href="admin-dashboard.html" class="list-group-item"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="admin-orders.html" class="list-group-item"><i class="bi bi-box-seam"></i> Orders</a>
+      <a href="admin-users.html" class="list-group-item"><i class="bi bi-people"></i> Users</a>
+      <a href="admin-payments.html" class="list-group-item"><i class="bi bi-wallet2"></i> Payments</a>
+      <a href="admin-cash-type.html" class="list-group-item"><i class="bi bi-cash-coin"></i> Cash Type</a>
+      <a href="admin-categories.html" class="list-group-item"><i class="bi bi-list-ul"></i> Categories</a>
+      <a href="admin-services.html" class="list-group-item"><i class="bi bi-gear"></i> Services</a>
+      <a href="admin-manual-services.html" class="list-group-item"><i class="bi bi-tools"></i> Manual Services</a>
+      <a href="admin-broadcast.html" class="list-group-item "><i class="bi bi-megaphone"></i> Announcements</a>
+      <a href="admin-analytics.html" class="list-group-item active"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+      <a href="admin-settings.html" class="list-group-item"><i class="bi bi-sliders"></i> Settings</a>
+      <a href="#" id="btnLogout" class="list-group-item text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
+
+<div id="page-content-wrapper">
+  <div class="container">
+  
+  <div class="header">
+    <h1>Admin Analytics</h1>
+    <div class="controls">
+      <select id="datePreset" onchange="applyDatePreset(this.value)">
+          <option value="30">Last 30 Days</option>
+          <option value="7">Last 7 Days</option>
+          <option value="90">Last 3 Months</option>
+          <option value="custom">Custom Range</option>
+      </select>
+      <input type="date" id="startDate" placeholder="Start Date" disabled>
+      <input type="date" id="endDate" placeholder="End Date" disabled>
+      <button class="btn" onclick="fetchDataByDateRange()">Apply Filter <span id="mainLoader" class="loader"></span></button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="card">
+      <span class="stat-label">Total Users</span><br>
+      <span class="stat-value" id="totalUsersOverview">...</span>
+    </div>
+    <div class="card">
+      <span class="stat-label">Total Wallet Bal</span>
+      <span class="stat-value c-blue" id="totalWalletBal">₹0</span>
+    </div>
+    <div class="card">
+      <span class="stat-label">Total Deposits</span><br>
+      <span class="stat-value c-green" id="totalDeposits">₹0</span>
+    </div>
+
+    <div class="card">
+      <span class="stat-label">Period Income (Sales)</span>
+      <span class="stat-value" id="incomeEl">₹0</span>
+    </div>
+    <div class="card">
+      <span class="stat-label">Period Cost (Vendor)</span>
+      <span class="stat-value c-red" id="costEl">₹0</span>
+    </div>
+    <div class="card">
+      <span class="stat-label">Net Profit</span>
+      <span class="stat-value c-green" id="profitEl">₹0</span>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <canvas id="chartCanvas"></canvas>
+  </div>
+
+  <div class="table-card">
+    <h3>User Database</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Wallet Bal</th>
+            <th>Spent (All Time)</th>
+            <th>Orders</th>
+            <th>Added Funds</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+            <tr><td colspan='5' style='text-align:center;'>Loading users...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+<div id="userModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>User Orders: <span id="modalUsername" style="color:var(--primary)"></span></h3>
+      <button onclick="closeModal()" style="border:none;background:none;font-size:20px;cursor:pointer;">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="summary-bar">
+        <span>Orders: <b id="mTotalOrders">0</b></span>
+        <span>Spent (Paid): <b id="mTotalSpent">0</b></span>
+        <span>Profit: <b id="mTotalProfit" class="c-green">0</b></span>
+        <span id="modalLoader" class="loader"></span>
+      </div>
+      
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Service</th>
+              <th>Qty</th>
+              <th>Price (User)</th>
+              <th>Vendor Cost</th>
+              <th>Profit</th>
+              <th>Status</th> <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="modalOrdersBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ================= FIREBASE IMPORT ================= */
+import { db } from "./firebase.js";
+import { collection, getDocs, query, where, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
+/* ================= UTILS & CONFIG ================= */
+const DAY = 86400000;
+const fmt = n => "₹" + Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+let chartInstance = null;
+
+// Global triggers
+window.fetchDataByDateRange = fetchDataByDateRange;
+window.closeModal = () => document.getElementById("userModal").classList.remove("active");
+window.openUserModal = openUserModal;
+window.applyDatePreset = applyDatePreset;
+
+function toMillis(val) {
+    if (!val) return 0;
+    if (typeof val === "number") return val;
+    if (typeof val === "string") {
+        const n = Number(val);
+        return Number.isFinite(n) ? n : 0;
+    }
+    if (typeof val.toMillis === "function") return val.toMillis();
+    if (typeof val.seconds === "number") return val.seconds * 1000;
+    return 0;
+}
+
+/* ================= DATE & FILTER LOGIC ================= */
+
+function formatDate(timestamp) {
+    const d = new Date(timestamp);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function applyDatePreset(value) {
+    const startDateInput = document.getElementById("startDate");
+    const endDateInput = document.getElementById("endDate");
+    const today = Date.now();
+    endDateInput.value = formatDate(today);
+
+    if (value === 'custom') {
+        startDateInput.disabled = false;
+        endDateInput.disabled = false;
+        return;
+    }
+    
+    startDateInput.disabled = true;
+    endDateInput.disabled = true;
+
+    const days = parseInt(value);
+    const startTs = today - (days * DAY);
+    startDateInput.value = formatDate(startTs);
+    
+    fetchDataByDateRange(); // Auto-fetch when preset changes
+}
+
+function fetchDataByDateRange() {
+    const startDateInput = document.getElementById("startDate").value;
+    const endDateInput = document.getElementById("endDate").value;
+
+    let fromTs, toTs;
+
+    try {
+        if (!startDateInput || !endDateInput) {
+            console.warn("Please select both start and end dates.");
+            return;
+        }
+
+        // Convert date string to start-of-day timestamp (in milliseconds)
+        fromTs = new Date(startDateInput).getTime(); 
+        // Convert date string to end-of-day timestamp
+        toTs = new Date(endDateInput);
+        toTs.setDate(toTs.getDate() + 1); // Add one day
+        toTs = toTs.getTime() - 1; // Subtract 1 ms to get end of selected day
+
+        if (fromTs > toTs) {
+            alert("Start date cannot be after end date.");
+            return;
+        }
+    } catch (e) {
+        console.error("Invalid date format:", e);
+        return;
+    }
+
+    document.getElementById("mainLoader").classList.add("show");
+
+    Promise.all([
+        loadPeriodStats(fromTs, toTs),
+        loadLifetimeStatsAndTable() 
+    ]).catch(err => {
+        console.error("Error fetching dashboard data:", err);
+    }).finally(() => {
+        document.getElementById("mainLoader").classList.remove("show");
+    });
+}
+
+/* ================= DASHBOARD LOGIC ================= */
+
+// PERIOD STATS (Graph, Cost, Profit)
+async function loadPeriodStats(fromTs, toTs) {
+  const fromStamp = Timestamp.fromMillis(fromTs);
+  const toStamp = Timestamp.fromMillis(toTs);
+
+  const queries = [
+    query(collection(db, "orders"), where("createdAt", ">=", fromTs), where("createdAt", "<=", toTs)),
+    query(collection(db, "orders"), where("createdAt", ">=", fromStamp), where("createdAt", "<=", toStamp)),
+  ];
+
+  const snaps = await Promise.all(
+    queries.map(q => getDocs(q).catch(() => null))
+  );
+
+  const merged = new Map();
+  snaps.filter(Boolean).forEach(snap => snap.forEach(d => merged.set(d.id, d)));
+
+  let income = 0, cost = 0;
+  const buckets = {};
+
+  for (const d of merged.values()) {
+    const o = d.data();
+    const amt = Number(o.amount || 0);
+    const vp = Number(o.vendorPrice || 0);
+    const qty = Number(o.qty || 0);
+
+    let itemCost = (vp > 0 && qty > 0) ? (vp / 1000) * qty : 0;
+
+    income += amt;
+    cost += itemCost;
+
+    const createdMs = toMillis(o.createdAt);
+    if (createdMs) {
+      const dateKey = new Date(createdMs).toLocaleDateString("en-IN");
+      if(!buckets[dateKey]) buckets[dateKey] = { income: 0, cost: 0 };
+      buckets[dateKey].income += amt;
+      buckets[dateKey].cost += itemCost;
+    }
+  }
+
+  document.getElementById("incomeEl").textContent = fmt(income);
+  document.getElementById("costEl").textContent = fmt(cost);
+  document.getElementById("profitEl").textContent = fmt(income - cost);
+
+  renderChart(buckets);
+}
+
+// LIFETIME STATS (Wallets, Deposits & User List Table)
+async function loadLifetimeStatsAndTable() {
+  const usersSnap = await getDocs(collection(db, "users"));
+  const paymentsSnap = await getDocs(collection(db, "payments"));
+  const ordersSnap = await getDocs(collection(db, "orders")); 
+
+  let totalWalletBal = 0;
+  let totalDeposits = 0;
+  const fundMap = {}, spentMap = {}, orderMap = {};
+
+  paymentsSnap.forEach(d => {
+    const p = d.data();
+    if((p.status === "approved" || p.status === "completed") && p.username) {
+      const amt = Number(p.amount || 0);
+      totalDeposits += amt;
+      fundMap[p.username] = (fundMap[p.username] || 0) + amt;
+    }
+  });
+
+  ordersSnap.forEach(d => {
+    const o = d.data();
+    if(o.payer) {
+      spentMap[o.payer] = (spentMap[o.payer] || 0) + Number(o.amount || 0);
+      orderMap[o.payer] = (orderMap[o.payer] || 0) + 1;
+    }
+  });
+
+  let html = "";
+  usersSnap.forEach(d => {
+    const u = d.data();
+    const username = u.username;
+    const bal = Number(u.balance || 0);
+    totalWalletBal += bal;
+
+    html += `
+      <tr>
+        <td><a class="user-link" onclick="openUserModal('${username}')">${username}</a></td>
+        <td>${fmt(bal)}</td>
+        <td>${fmt(spentMap[username])}</td>
+        <td>${orderMap[username] || 0}</td>
+        <td>${fmt(fundMap[username])}</td>
+      </tr>`;
+  });
+
+  document.getElementById("totalUsersOverview").textContent = usersSnap.size;
+  document.getElementById("totalWalletBal").textContent = fmt(totalWalletBal);
+  document.getElementById("totalDeposits").textContent = fmt(totalDeposits);
+  document.getElementById("userTableBody").innerHTML = html || "<tr><td colspan='5' style='text-align:center;'>No users found</td></tr>";
+}
+
+function renderChart(buckets) {
+  const labels = Object.keys(buckets).sort((a,b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')));
+  const dataInc = labels.map(k => buckets[k].income);
+  const dataProf = labels.map(k => buckets[k].income - buckets[k].cost);
+
+  const ctx = document.getElementById("chartCanvas").getContext("2d");
+  if(chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Income', data: dataInc, borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)', fill: true, tension: 0.3 },
+        { label: 'Profit', data: dataProf, borderColor: '#10b981', borderDash: [5,5], tension: 0.3 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+  });
+}
+
+
+/* ================= USER MODAL LOGIC (Status Added) ================= */
+
+async function openUserModal(username) {
+  const modal = document.getElementById("userModal");
+  document.getElementById("modalUsername").textContent = username;
+  document.getElementById("modalOrdersBody").innerHTML = "";
+  document.getElementById("modalLoader").classList.add("show");
+  modal.classList.add("active");
+
+  try {
+    const q = query(
+      collection(db, "orders"), 
+      where("payer", "==", username),
+      orderBy("createdAt", "desc"),
+      limit(50) 
+    );
+    
+    let snap;
+    try {
+        snap = await getDocs(q);
+    } catch(e) {
+        // Fallback for missing index
+        const fallbackQ = query(collection(db, "orders"), where("payer", "==", username), limit(50));
+        snap = await getDocs(fallbackQ);
+    }
+    
+    let rows = "", tSpent = 0, tProfit = 0, tOrders = 0;
+
+    snap.forEach(d => {
+      const o = d.data();
+      const amt = Number(o.amount || 0);
+      const vp = Number(o.vendorPrice || 0);
+      const qty = Number(o.qty || 0);
+      
+      let cost = (vp > 0 && qty > 0) ? (vp/1000) * qty : 0;
+      const prof = amt - cost;
+      const createdMs = toMillis(o.createdAt);
+      const dateLabel = createdMs ? new Date(createdMs).toLocaleDateString('en-IN') : "N/A";
+
+      tSpent += amt; tProfit += prof; tOrders++;
+
+      const status = o.status || 'N/A';
+
+      rows += `<tr>
+        <td>${o.orderId || o.id || 'N/A'}</td>
+        <td><small>${(o.serviceTitle || "Service").substring(0,25)}...</small></td>
+        <td>${qty}</td>
+        <td><b>${fmt(amt)}</b></td>
+        <td class="c-red">${fmt(cost)}</td>
+        <td class="${prof >= 0 ? 'c-green' : 'c-red'}"><b>${fmt(prof)}</b></td>
+        <td><span style="background:${getStatusColor(status)}; color:#fff; padding:3px 6px; border-radius:4px; font-size:11px; font-weight: 500;">${status}</span></td>
+        <td><small>${dateLabel}</small></td>
+      </tr>`;
+    });
+
+    document.getElementById("mTotalOrders").textContent = tOrders;
+    document.getElementById("mTotalSpent").textContent = fmt(tSpent);
+    document.getElementById("mTotalProfit").textContent = fmt(tProfit);
+    document.getElementById("modalOrdersBody").innerHTML = rows || "<tr><td colspan='8' style='text-align:center;'>No orders found for this user.</td></tr>";
+  } catch(e) { 
+    console.error("Error loading user orders:", e); 
+    document.getElementById("modalOrdersBody").innerHTML = "<tr><td colspan='8' style='color:var(--danger); text-align:center;'>Failed to load orders. Check console.</td></tr>";
+  }
+  finally { 
+    document.getElementById("modalLoader").classList.remove("show"); 
+  }
+}
+
+function getStatusColor(status) {
+    status = (status || "").toLowerCase();
+    if(status === 'completed' || status === 'success') return '#10b981'; /* success */
+    if(status === 'pending' || status === 'processing' || status === 'in progress') return '#f59e0b'; /* warning */
+    if(status === 'canceled' || status === 'partial' || status === 'refunded') return '#ef4444'; /* danger */
+    return '#6b7280'; /* gray */
+}
+
+/* ================= INITIAL LOAD ================= */
+window.onload = () => {
+    applyDatePreset('30'); // Load with default 30 days preset
+};
+</script>
+
+<script type="module" src="admin-sync.js"></script>
+</body>
+</html>
+
+
+
+

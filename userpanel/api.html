@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API Docs</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    .docs-hero {
+      background: linear-gradient(135deg, #0d6efd 0%, #3b82f6 100%);
+      border-radius: 16px;
+      color: #fff;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 24px rgba(13, 110, 253, 0.22);
+    }
+
+    .docs-hero h4 {
+      margin: 0 0 6px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .docs-hero p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .api-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .api-card-title {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .meta-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .meta-item .label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .meta-item .value {
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 0.9rem;
+      word-break: break-word;
+    }
+
+    .table-wrap {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .table {
+      margin: 0;
+      font-size: 0.86rem;
+    }
+
+    .table th {
+      background: #f8fafc;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: #475569;
+      letter-spacing: 0.02em;
+    }
+
+    .code-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      margin: 0;
+      line-height: 1.55;
+      font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    }
+
+    .endpoint-note {
+      font-size: 0.84rem;
+      color: #475569;
+      margin-bottom: 10px;
+    }
+
+    .badge-soft {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      font-weight: 700;
+    }
+
+    .accordion-button {
+      font-weight: 700;
+      color: #0f172a;
+      gap: 8px;
+    }
+
+    .accordion-button:not(.collapsed) {
+      color: #0d6efd;
+      background: #f8fbff;
+      box-shadow: inset 0 -1px 0 rgba(13, 110, 253, 0.1);
+    }
+
+    .accordion-item {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li class="active"><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>API Documentation</h5>
+        </div>
+      </div>
+      <span class="badge badge-plain"><i class="bi bi-code-slash me-1"></i> Version v2</span>
+    </div>
+
+    <section class="docs-hero">
+      <h4><i class="bi bi-headset me-1"></i> 24/7 Support</h4>
+      <p>
+        Hello dear API users. You can get good discounts and group support, just message us.
+        We deliver the best and let us grow together.
+      </p>
+    </section>
+
+    <section class="api-card">
+      <div class="api-card-title">
+        <i class="bi bi-info-circle-fill text-primary"></i>
+        API Basics
+      </div>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">HTTP Method</span>
+          <span class="value">POST</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">API URL</span>
+          <span class="value" id="apiUrlValue">/api/api</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">API Key</span>
+          <span class="value">Get your API key from the Account page</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Response Format</span>
+          <span class="value">JSON</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="api-card">
+      <div class="api-card-title">
+        <i class="bi bi-terminal-fill text-primary"></i>
+        Common Request Body
+      </div>
+      <p class="endpoint-note">Send form data as <code>application/x-www-form-urlencoded</code> in POST body.</p>
+      <pre class="code-box">key=YOUR_API_KEY&action=services</pre>
+    </section>
+
+    <section class="api-card">
+      <div class="api-card-title">
+        <i class="bi bi-diagram-3-fill text-primary"></i>
+        Endpoints
+      </div>
+
+      <div class="accordion" id="apiAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headServices">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#colServices" aria-expanded="true" aria-controls="colServices">
+              Service List <span class="badge-soft">action=services</span>
+            </button>
+          </h2>
+          <div id="colServices" class="accordion-collapse collapse show" aria-labelledby="headServices" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>services</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">[
+  {
+    "service": 1,
+    "name": "Followers",
+    "type": "Default",
+    "category": "First Category",
+    "rate": "0.90",
+    "min": "50",
+    "max": "10000",
+    "refill": true,
+    "cancel": true
+  },
+  {
+    "service": 2,
+    "name": "Comments",
+    "type": "Custom Comments",
+    "category": "Second Category",
+    "rate": "8",
+    "min": "10",
+    "max": "1500",
+    "refill": false,
+    "cancel": true
+  }
+]</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headAdd">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colAdd" aria-expanded="false" aria-controls="colAdd">
+              Add Order <span class="badge-soft">action=add</span>
+            </button>
+          </h2>
+          <div id="colAdd" class="accordion-collapse collapse" aria-labelledby="headAdd" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <p class="endpoint-note">Order type: <code>Default</code>.</p>
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>add</code></td></tr>
+                    <tr><td><code>service</code></td><td>Service ID</td></tr>
+                    <tr><td><code>link</code></td><td>Target URL / username</td></tr>
+                    <tr><td><code>quantity</code></td><td>Order quantity</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">{
+  "order": 23501
+}</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headStatus">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colStatus" aria-expanded="false" aria-controls="colStatus">
+              Order Status <span class="badge-soft">action=status</span>
+            </button>
+          </h2>
+          <div id="colStatus" class="accordion-collapse collapse" aria-labelledby="headStatus" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>status</code></td></tr>
+                    <tr><td><code>order</code></td><td>Order ID</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">{
+  "charge": "0.27819",
+  "start_count": "3572",
+  "status": "Partial",
+  "remains": "157",
+  "currency": "USD"
+}</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headStatuses">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colStatuses" aria-expanded="false" aria-controls="colStatuses">
+              Multiple Orders Status <span class="badge-soft">action=status</span>
+            </button>
+          </h2>
+          <div id="colStatuses" class="accordion-collapse collapse" aria-labelledby="headStatuses" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>status</code></td></tr>
+                    <tr><td><code>orders</code></td><td>Order IDs separated by comma (max 100)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">{
+  "1": {
+    "charge": "0.27819",
+    "start_count": "3572",
+    "status": "Partial",
+    "remains": "157",
+    "currency": "USD"
+  },
+  "10": {
+    "error": "Incorrect order ID"
+  },
+  "100": {
+    "charge": "1.44219",
+    "start_count": "234",
+    "status": "In progress",
+    "remains": "10",
+    "currency": "USD"
+  }
+}</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headRefill">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colRefill" aria-expanded="false" aria-controls="colRefill">
+              Create Refill <span class="badge-soft">action=refill</span>
+            </button>
+          </h2>
+          <div id="colRefill" class="accordion-collapse collapse" aria-labelledby="headRefill" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>refill</code></td></tr>
+                    <tr><td><code>order</code></td><td>Order ID</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">{
+  "refill": "1"
+}</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headMultiRefill">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colMultiRefill" aria-expanded="false" aria-controls="colMultiRefill">
+              Create Multiple Refill <span class="badge-soft">action=refill</span>
+            </button>
+          </h2>
+          <div id="colMultiRefill" class="accordion-collapse collapse" aria-labelledby="headMultiRefill" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>refill</code></td></tr>
+                    <tr><td><code>orders</code></td><td>Order IDs separated by comma (max 100)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">[
+  {
+    "order": 1,
+    "refill": 1
+  },
+  {
+    "order": 2,
+    "refill": 2
+  },
+  {
+    "order": 3,
+    "refill": {
+      "error": "Incorrect order ID"
+    }
+  }
+]</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headRefillStatus">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colRefillStatus" aria-expanded="false" aria-controls="colRefillStatus">
+              Get Refill Status <span class="badge-soft">action=refill_status</span>
+            </button>
+          </h2>
+          <div id="colRefillStatus" class="accordion-collapse collapse" aria-labelledby="headRefillStatus" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>refill_status</code></td></tr>
+                    <tr><td><code>refill</code></td><td>Refill ID</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">{
+  "status": "Completed"
+}</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headMultiRefillStatus">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colMultiRefillStatus" aria-expanded="false" aria-controls="colMultiRefillStatus">
+              Get Multiple Refill Status <span class="badge-soft">action=refill_status</span>
+            </button>
+          </h2>
+          <div id="colMultiRefillStatus" class="accordion-collapse collapse" aria-labelledby="headMultiRefillStatus" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>refill_status</code></td></tr>
+                    <tr><td><code>refills</code></td><td>Refill IDs separated by comma (max 100)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">[
+  {
+    "refill": 1,
+    "status": "Completed"
+  },
+  {
+    "refill": 2,
+    "status": "Rejected"
+  },
+  {
+    "refill": 3,
+    "status": {
+      "error": "Refill not found"
+    }
+  }
+]</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headCancel">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colCancel" aria-expanded="false" aria-controls="colCancel">
+              Create Cancel <span class="badge-soft">action=cancel</span>
+            </button>
+          </h2>
+          <div id="colCancel" class="accordion-collapse collapse" aria-labelledby="headCancel" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>cancel</code></td></tr>
+                    <tr><td><code>orders</code></td><td>Order IDs separated by comma (max 100)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">[
+  {
+    "order": 9,
+    "cancel": {
+      "error": "Incorrect order ID"
+    }
+  },
+  {
+    "order": 2,
+    "cancel": 1
+  }
+]</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item mb-0">
+          <h2 class="accordion-header" id="headBalance">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colBalance" aria-expanded="false" aria-controls="colBalance">
+              User Balance <span class="badge-soft">action=balance</span>
+            </button>
+          </h2>
+          <div id="colBalance" class="accordion-collapse collapse" aria-labelledby="headBalance" data-bs-parent="#apiAccordion">
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>key</code></td><td>Your API key</td></tr>
+                    <tr><td><code>action</code></td><td><code>balance</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <pre class="code-box">{
+  "balance": "100.84292",
+  "currency": "USD"
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="panel-theme.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script>
+    (function () {
+      const apiUrl = `${window.location.origin}/api/api`;
+      const el = document.getElementById("apiUrlValue");
+      if (el) el.textContent = apiUrl;
+    })();
+  </script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>
+
+
+

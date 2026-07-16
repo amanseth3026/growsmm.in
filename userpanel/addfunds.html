@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Funds</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="broadcasts-widget.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    .mode-tabs {
+      background: #edf2f7;
+      border-radius: 12px;
+      padding: 4px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .mode-btn {
+      border: 0;
+      background: transparent;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .mode-btn.active {
+      background: #fff;
+      color: #0f172a;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-hidden { display: none; }
+
+    .instruction-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .instruction-title {
+      color: #475569;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .instruction-lines {
+      color: #334155;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .instruction-note {
+      color: #dc2626;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .btn-fund {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: 700;
+      background: #198754;
+      color: #fff;
+    }
+
+    .btn-fund:hover { background: #157347; }
+
+    .qr-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(37, 45, 78, 0.72);
+      display: none;
+      z-index: 1100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .qr-popup-card {
+      width: min(460px, 96vw);
+      background: #efefef;
+      border: 3px solid #d8d8d8;
+      border-radius: 8px;
+      padding: 14px 16px 16px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.3);
+      text-align: center;
+      position: relative;
+    }
+
+    .qr-popup-close {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      border: 0;
+      background: transparent;
+      font-size: 22px;
+      line-height: 1;
+      color: #444;
+    }
+
+    .qr-amount-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #d7d7d7;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .qr-amount-value { color: #0f62d0; font-size: 24px; }
+
+    .qr-image-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px;
+      display: inline-block;
+    }
+
+    .qr-actions { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+
+    .state-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 1200;
+      align-items: center;
+      justify-content: center;
+      background: rgba(37,45,78,.55);
+      padding: 16px;
+    }
+
+    .state-card {
+      width: min(520px, 96vw);
+      background: #fff;
+      border-radius: 10px;
+      padding: 26px 18px;
+      text-align: center;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    }
+
+    .state-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 999px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      font-weight: 800;
+    }
+
+    .state-title { font-size: 38px; font-weight: 600; line-height: 1.1; margin: 0 0 6px; }
+    .state-msg { font-size: 16px; color: #666; margin: 0; }
+
+    .state-ok .state-icon { color: #95d084; background: #eff9ea; border: 4px solid #cfe6c6; }
+    .state-fail .state-icon { color: #e74c3c; background: #ffefef; border: 4px solid #f4c5c1; }
+
+    .status-text { font-size: 12px; color: #6b7280; margin-top: 6px; }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    #userPaymentsPaginationWrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .user-payments-pagination .page-item + .page-item {
+      margin-left: 8px;
+    }
+
+    .user-payments-pagination .page-link {
+      min-width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid #dbe2ea;
+      background: #fff;
+      color: #64748b;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      line-height: 1;
+      box-shadow: none;
+    }
+
+    .user-payments-pagination .page-item.active .page-link {
+      background: #2f80ed;
+      border-color: #2f80ed;
+      color: #fff;
+      box-shadow: 0 8px 16px rgba(47, 128, 237, 0.28);
+    }
+
+    .user-payments-pagination .page-item.disabled .page-link {
+      color: #c0c7d2;
+      border-color: #e5e7eb;
+      background: #f8fafc;
+    }
+
+    .user-payments-pagination .page-item.ellipsis .page-link {
+      min-width: auto;
+      padding: 0 2px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      pointer-events: none;
+    }
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li class="active"><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>Add Funds</h5>
+          <small>Fast wallet recharge</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge badge-balance"><i class="bi bi-wallet2"></i> <span id="userBalance"></span></span>
+      </div>
+    </div>
+
+    <div id="broadcastTicker" class="broadcast-ticker-wrap mb-3"></div>
+
+    <div class="panel-card">
+      <div class="mode-tabs" id="paymentModeTabs">
+        <button id="tabManual" type="button" class="mode-btn"><i class="bi bi-pencil-square"></i> Manual</button>
+        <button id="tabAuto" type="button" class="mode-btn active"><i class="bi bi-qr-code-scan"></i> Auto QR</button>
+      </div>
+    </div>
+
+    <div id="manualSection" class="section-hidden">
+      <div class="panel-card text-center">
+        <p class="text-muted small mb-2">Scan QR to Pay (Manual Verification)</p>
+        <div class="p-3 bg-light d-inline-block rounded border mb-2">
+          <img id="manualQrImage" src="data:," alt="UPI QR" width="140">
+        </div>
+        <h6 class="fw-bold" id="manualUpiId"></h6>
+        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger rounded-pill px-3">Min: &#8377;10</span>
+      </div>
+
+      <div class="instruction-card">
+        <div class="instruction-title">How to Add Funds (Manual)</div>
+        <div class="instruction-lines">
+          <ol class="mb-2">
+            <li>Open your UPI app and scan the QR shown above.</li>
+            <li>Send the amount (minimum &#8377;10).</li>
+            <li>Copy UTR / Reference number from your app.</li>
+            <li>Paste UTR and click <strong>VERIFY PAYMENT</strong>.</li>
+            <li>NOTE: The amount should not be in decimals.
+          </ol>
+          <p class="m-0">If payment succeeded but not reflected, contact admin on WhatsApp: <span data-whatsapp-number></span>.</p>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h6 class="fw-bold mb-3"><i class="bi bi-send-check"></i> Submit Manual Transaction</h6>
+        <form id="addFundsForm">
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">UTR / Ref No.</label>
+            <input type="text" id="utrInput" class="form-control" placeholder="12 Digit UTR" required>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted">Amount</label>
+              <input type="number" id="amountInput" class="form-control" placeholder="500" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted">Name</label>
+              <input type="text" id="payerNameInput" class="form-control" placeholder="Your Name" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-fund">VERIFY PAYMENT</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="autoSection">
+      <div class="panel-card">
+        <h6 class="fw-bold mb-3"><i class="bi bi-qr-code-scan"></i> Auto Add Funds (Instant)</h6>
+        <div class="instruction-card">
+          <div class="instruction-title">How to Add Funds</div>
+          <div class="instruction-lines">
+            <ol class="mb-2">
+              <li>Enter amount and name.</li>
+              <li>Click <strong>GENERATE AUTO QR</strong>.</li>
+              <li>Scan and complete payment within 3 minutes.</li>
+              <li>Amount will be auto-verified in around 1 minute.</li>
+            </ol>
+            <p class="m-0">Need help? Contact admin on WhatsApp: <span data-whatsapp-number></span></p>
+          </div>
+          <div class="instruction-note">If QR expires, generate a fresh QR.</div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Amount</label>
+            <input type="number" id="autoAmountInput" class="form-control" placeholder="10" min="10">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Name</label>
+            <input type="text" id="autoPayerNameInput" class="form-control" placeholder="Your Name">
+          </div>
+        </div>
+
+        <button id="btnGenerateAutoQr" class="btn-fund" type="button">GENERATE AUTO QR</button>
+        <button id="btnResumeAutoPayment" class="btn btn-outline-primary w-100 mt-2 section-hidden" type="button">OPEN ACTIVE QR</button>
+      </div>
+    </div>
+
+    <div class="panel-card p-0 overflow-hidden">
+      <div class="p-3 border-bottom">
+        <h6 class="mb-0"><i class="bi bi-clock-history"></i> Recent Transactions</h6>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped mb-0 small">
+          <thead>
+            <tr>
+              <th>Date/Time</th>
+              <th>Method</th>
+              <th>UTR/Ref</th>
+              <th>Amt</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="paymentHistoryTable"></tbody>
+        </table>
+      </div>
+      <div id="userPaymentsPaginationWrap" class="d-none p-3 border-top">
+        <nav aria-label="User payment pages">
+          <ul id="userPaymentsPagination" class="user-payments-pagination pagination pagination-sm mb-0"></ul>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal fade" id="addFundsSuccessModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content rounded-4 border-0 p-4 text-center">
+        <i class="bi bi-check-circle-fill text-success display-3 mb-3"></i>
+        <h5>Sent!</h5>
+        <p class="small text-muted">Verification takes 1-2 hours.</p>
+        <button class="btn btn-dark w-100" data-bs-dismiss="modal">Okay</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="autoQrPopupOverlay" class="qr-popup-overlay">
+    <div class="qr-popup-card">
+      <button id="btnCloseAutoPopup" type="button" class="qr-popup-close" aria-label="Close">x</button>
+      <h4 class="fw-bold mb-0"><span data-panel-name></span></h4>
+      <div class="text-muted small mb-2">Transfer to</div>
+      <div class="qr-amount-row">
+        <span>Total Amount</span>
+        <span id="autoPayableAmount" class="qr-amount-value">&#8377;0.00</span>
+      </div>
+      <div class="qr-image-box">
+        <img id="autoQrImage" alt="Auto QR" width="260" height="260">
+      </div>
+      <div class="small mt-2">Requested: <span id="autoBaseAmount" class="fw-bold">&#8377;0.00</span></div>
+      <div class="small">UPI: <span id="autoUpiId" class="mono">-</span></div>
+      <div class="fw-bold mt-2">This QR code will expire in <span id="autoTimer" class="text-danger">03:00</span></div>
+      <div id="autoStatusText" class="status-text">Status: pending</div>
+      <div class="qr-actions">
+        <button id="btnCancelAutoPayment" type="button" class="btn btn-danger">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="autoStateOverlay" class="state-overlay">
+    <div id="autoStateCard" class="state-card state-ok">
+      <div id="autoStateIcon" class="state-icon">OK</div>
+      <h3 id="autoStateTitle" class="state-title">Payment Success</h3>
+      <p id="autoStateMsg" class="state-msg">Redirecting to Balance...</p>
+    </div>
+  </div>
+
+  <script src="panel-theme.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="addfunds.js"></script>
+  <script type="module" src="broadcasts-widget.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>
+
+
+
+
+

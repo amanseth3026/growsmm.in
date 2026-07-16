@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup - GrowSMM</title>
+  <meta name="description" content="Create your GrowSMM account and start social media growth campaigns instantly.">
+  <meta name="theme-color" content="#07070f">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://growsmm.in/signup.html">
+
+  <meta property="og:title" content="Signup - GrowSMM">
+  <meta property="og:description" content="Create your GrowSMM account and start social media growth campaigns instantly.">
+  <meta property="og:image" content="https://growsmm.in/logo.png">
+  <meta property="og:url" content="https://growsmm.in/signup.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GrowSMM">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Signup - GrowSMM">
+  <meta name="twitter:description" content="Create your GrowSMM account and start social media growth campaigns instantly.">
+  <meta name="twitter:image" content="https://growsmm.in/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="shortcut icon" type="image/png" href="/logo.png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <script type="module" src="/scripts/site-branding.js"></script>
+
+  <style>
+    :root{
+      --bg:#07070f; --bg-2:#0d0d1c;
+      --surface:rgba(255,255,255,0.04);
+      --border:rgba(255,255,255,0.09);
+      --text:#e9e9f4; --muted:#9aa0b4;
+      --brand-1:#7c5cff; --brand-2:#ff4ecd; --brand-3:#ffb457;
+      --grad:linear-gradient(135deg,#7c5cff 0%,#ff4ecd 55%,#ffb457 100%);
+    }
+    *{box-sizing:border-box}
+    html,body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+    h1,h2,h3,.brand-logo{font-family:'Space Grotesk','Inter',sans-serif;letter-spacing:-0.02em}
+    a{color:inherit;text-decoration:none}
+    a:hover{color:#fff}
+    ::selection{background:var(--brand-1);color:#fff}
+
+    body::before,body::after{content:"";position:fixed;width:520px;height:520px;border-radius:50%;filter:blur(120px);opacity:.55;z-index:0;pointer-events:none}
+    body::before{background:radial-gradient(circle,#7c5cff 0%,transparent 70%);top:-160px;left:-160px}
+    body::after{background:radial-gradient(circle,#ff4ecd 0%,transparent 70%);bottom:-200px;right:-180px}
+
+    .nav-wrap{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(14px);background:rgba(7,7,15,0.55);border-bottom:1px solid var(--border)}
+    .navbar{padding:14px 0}
+    .brand-logo{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem;color:#fff}
+    .brand-logo img{height:34px}
+    .navbar-nav .nav-link{color:var(--muted)!important;font-weight:500;padding:8px 14px!important;border-radius:8px;transition:.2s}
+    .navbar-nav .nav-link:hover{color:#fff!important;background:var(--surface)}
+    .navbar-toggler{border:1px solid var(--border);padding:6px 10px}
+    .navbar-toggler-icon{filter:invert(1) brightness(1.5)}
+
+    .signup-wrap{position:relative;z-index:2;min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:60px 16px}
+    .signup-card{width:100%;max-width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));border:1px solid var(--border);border-radius:24px;padding:36px 32px;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,0.5)}
+    .signup-title{font-size:1.9rem;font-weight:700;margin:0 0 6px;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .signup-sub{color:var(--muted);font-size:.92rem;margin-bottom:22px}
+    .field-label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 6px}
+    .signup-card .form-control{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:#fff;border-radius:12px;padding:12px 14px;font-size:.95rem;transition:.2s}
+    .signup-card .form-control:focus{background:rgba(255,255,255,0.07);border-color:var(--brand-1);box-shadow:0 0 0 4px rgba(124,92,255,.15);color:#fff}
+    .signup-card .form-control::placeholder{color:#5f6478}
+    .signup-error{background:rgba(255,78,205,0.1);border:1px solid rgba(255,78,205,0.3);color:#ffb8e4;border-radius:10px;padding:10px 14px;font-size:.88rem;margin-bottom:10px;display:none}
+    .signup-error:not(:empty){display:block}
+    .terms-wrap{margin:18px 0 8px;color:var(--muted);font-size:.88rem}
+    .terms-wrap .form-check-input{background:rgba(255,255,255,0.06);border-color:var(--border)}
+    .terms-wrap .form-check-input:checked{background:var(--brand-1);border-color:var(--brand-1)}
+    .terms-wrap a{color:#c7b8ff;text-decoration:underline}
+    .btn-signup{width:100%;margin-top:14px;padding:14px;border:0;border-radius:14px;background:var(--grad);color:#fff;font-weight:700;font-size:1rem;letter-spacing:.01em;box-shadow:0 14px 34px rgba(124,92,255,.4);transition:.2s;cursor:pointer}
+    .btn-signup:hover{transform:translateY(-1px);box-shadow:0 20px 40px rgba(255,78,205,.4)}
+    .signin-text{color:var(--muted);font-size:.9rem;text-align:center;margin:22px 0 0}
+    .signin-text a{color:#c7b8ff;font-weight:600}
+    .signin-text a:hover{color:#fff}
+  </style>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://growsmm.in/#organization","name":"GrowSMM","url":"https://growsmm.in/","logo":{"@type":"ImageObject","url":"https://growsmm.in/logo.png"}},{"@type":"WebPage","name":"Signup - GrowSMM","url":"https://growsmm.in/signup.html","about":{"@id":"https://growsmm.in/#organization"}}]}
+  </script>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="page-signup">
+  <div class="nav-wrap">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="brand-logo" href="/index.html"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link login-trigger" href="/index.html"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="api.html"><i class="bi bi-link-45deg me-1"></i>API</a></li>
+            <li class="nav-item"><a class="nav-link" href="services.html"><i class="bi bi-megaphone me-1"></i>Services</a></li>
+            <li class="nav-item"><a class="nav-link" href="signup.html"><i class="bi bi-person-plus-fill me-1"></i>Signup</a></li>
+            <li class="nav-item"><a class="nav-link" href="blog.html"><i class="bi bi-newspaper me-1"></i>Blog</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <main class="signup-wrap">
+    <div class="signup-card">
+      <h1 class="signup-title">Create Account</h1>
+      <p class="signup-sub">Join thousands growing with <span data-panel-name></span> — instant delivery, best rates.</p>
+
+      <form id="signupForm" novalidate>
+        <div id="signupError" class="signup-error"></div>
+
+        <label class="field-label" for="suUsername">Username</label>
+        <input id="suUsername" type="text" class="form-control" placeholder="Choose a username">
+
+        <label class="field-label" for="suName">Name</label>
+        <input id="suName" type="text" class="form-control" placeholder="Your full name">
+
+        <label class="field-label" for="suEmail">Email</label>
+        <input id="suEmail" type="email" class="form-control" placeholder="you@example.com">
+
+        <label class="field-label" for="suWhatsapp">Whatsapp No.</label>
+        <input id="suWhatsapp" type="tel" class="form-control" placeholder="+91 ...">
+
+        <label class="field-label" for="suPassword">Password</label>
+        <input id="suPassword" type="password" class="form-control" placeholder="Create a strong password">
+
+        <label class="field-label" for="suConfirmPassword">Confirm password</label>
+        <input id="suConfirmPassword" type="password" class="form-control" placeholder="Re-enter password">
+
+        <div class="terms-wrap">
+          <label class="d-inline-flex align-items-center gap-2">
+            <input id="suTerms" type="checkbox" class="form-check-input mt-0">
+            <span>I agree with <a href="index.html#contact-section">Terms of service</a></span>
+          </label>
+        </div>
+
+        <button id="suSubmit" type="submit" class="btn-signup">Create account</button>
+      </form>
+
+      <p class="signin-text">Already have an account? <a href="/index.html#landingLoginCard">Sign in</a></p>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/scripts/signup.js"></script>
+</body>
+</html>

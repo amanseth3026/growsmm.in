@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:,">
+  <title>Order History</title>
+
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="panel-theme.css">
+  <link rel="stylesheet" href="broadcasts-widget.css">
+  <link rel="stylesheet" href="panel-settings.css">
+
+  <style>
+    .filter-scroll {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-scroll::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      border: 1px solid #dbe2ea;
+      background: white;
+      color: #4b5563;
+      border-radius: 24px;
+      padding: 8px 18px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      margin-right: 8px;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active {
+      background: #0d6efd;
+      color: #fff;
+      border-color: #0d6efd;
+      box-shadow: 0 4px 10px rgba(13, 110, 253, 0.28);
+    }
+
+    .order-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .order-id { font-weight: 700; color: #1f2937; }
+    .service-title { font-weight: 600; color: #4b5563; font-size: 0.9rem; margin-top: 8px; }
+    .link-box { word-break: break-all; font-size: 0.8rem; color: #0d6efd; margin-top: 5px; }
+    .link-box a { text-decoration: none; }
+
+    .status-badge {
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .status-pending { background: #f39c12; }
+    .status-processing { background: #3498db; }
+    .status-inprogress { background: #8e44ad; }
+    .status-completed { background: #27ae60; }
+    .status-partial { background: #c0392b; }
+    .status-canceled { background: #94a3b8; }
+
+    .detail-row {
+      font-size: 0.82rem;
+      color: #4b5563;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eef2f7;
+    }
+
+    .detail-label { font-weight: 500; color: #94a3b8; font-size: 0.75rem; }
+    .detail-val { font-weight: 600; color: #1f2937; }
+
+    .orders-pagination .page-item + .page-item {
+      margin-left: 8px;
+    }
+
+    #ordersPaginationWrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .orders-pagination .page-link {
+      min-width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid #dbe2ea;
+      background: #fff;
+      color: #64748b;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      line-height: 1;
+      box-shadow: none;
+    }
+
+    .orders-pagination .page-item.active .page-link {
+      background: #2f80ed;
+      border-color: #2f80ed;
+      color: #fff;
+      box-shadow: 0 8px 16px rgba(47, 128, 237, 0.28);
+    }
+
+    .orders-pagination .page-item.disabled .page-link {
+      color: #c0c7d2;
+      border-color: #e5e7eb;
+      background: #f8fafc;
+    }
+
+    .orders-pagination .page-item.ellipsis .page-link {
+      min-width: auto;
+      padding: 0 2px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      pointer-events: none;
+    }
+  </style>
+
+<link rel="stylesheet" href="/styles/modern-chrome.css">
+<script defer src="/scripts/modern-chrome.js"></script>
+  <link rel="stylesheet" href="modern-sidebar.css">
+  <link rel="stylesheet" href="../styles/perf-responsive.css">
+  <script src="../scripts/perf-boost.js" defer></script>
+</head>
+<body class="panel-theme">
+
+  <div class="overlay" id="panelOverlay"></div>
+
+    <aside class="sidebar" id="panelSidebar">
+    <div class="logo"><img src="/logo.png" alt="Panel Logo"><span data-panel-name></span></div>
+    <ul class="sidebar-menu">
+      <li><a href="neworder.html"><i class="fa-solid fa-cart-plus"></i> New Order</a></li>
+      <li class="active"><a href="orderhistory.html"><i class="fa-solid fa-clock-rotate-left"></i> Orders</a></li>
+      <li><a href="addfunds.html"><i class="fa-solid fa-wallet"></i> Add Funds</a></li>
+      <li><a href="account.html"><i class="fa-solid fa-user"></i> Account</a></li>
+      <li><a href="leaderboard.html"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a></li>
+      <li><a href="api.html"><i class="fa-solid fa-plug"></i> API</a></li>
+      <li><a href="help.html"><i class="fa-solid fa-robot"></i> AI Support</a></li>
+      <li><a href="broadcasts.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="privacy-details.html"><i class="fa-solid fa-shield-halved"></i> Privacy / Details</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-navbar">
+      <div class="d-flex align-items-center gap-2">
+        <button class="mobile-toggle" id="panelMobileToggle" type="button" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h5>Order History</h5>
+          <small id="totalOrdersCount">Loading...</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge badge-balance"><i class="bi bi-wallet2"></i> <span id="userBalance"></span></span>
+      </div>
+    </div>
+
+    <div id="broadcastTicker" class="broadcast-ticker-wrap mb-3"></div>
+
+    <div class="panel-card">
+      <div class="filter-scroll" id="statusFilters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="pending">Pending</button>
+        <button class="filter-btn" data-filter="processing">Processing</button>
+        <button class="filter-btn" data-filter="in progress">In Progress</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+        <button class="filter-btn" data-filter="canceled">Canceled</button>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+          <input id="orderSearchInput" type="text" class="form-control" placeholder="Search by Order ID, Service, Link, Status">
+        </div>
+      </div>
+
+      <div id="ordersContainer">
+        <div class="text-center mt-4 text-muted">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 small">Fetching your orders...</p>
+        </div>
+      </div>
+
+      <div id="ordersPaginationWrap" class="d-none mt-3">
+        <nav aria-label="Order pages">
+          <ul id="ordersPagination" class="orders-pagination pagination pagination-sm mb-0"></ul>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <script src="panel-theme.js"></script>
+  <script type="module" src="panel-effects.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="orderhistory.js"></script>
+  <script type="module" src="broadcasts-widget.js"></script>
+  <script type="module" src="panel-settings.js"></script>
+  <script src="modern-sidebar.js"></script>
+</body>
+</html>
+
+
+
+
+

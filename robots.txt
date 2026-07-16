@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://growsmm.in/sitemap.xml

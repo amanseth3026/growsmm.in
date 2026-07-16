@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<div id="wrapper">
+
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <div id="sidebar-wrapper">
+        <div class="sidebar-heading d-flex justify-content-between align-items-center">
+        <div class="panel-brand">
+          <span class="panel-name" data-panel-name></span>
+          <small class="panel-mobile d-none" data-panel-mobile></small>
+        </div>
+        <button class="btn btn-sm btn-light d-lg-none" id="sidebarCloseBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+        <div class="list-group list-group-flush">
+      <a href="admin-dashboard.html" class="list-group-item"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="admin-orders.html" class="list-group-item"><i class="bi bi-box-seam"></i> Orders</a>
+      <a href="admin-users.html" class="list-group-item"><i class="bi bi-people"></i> Users</a>
+      <a href="admin-payments.html" class="list-group-item"><i class="bi bi-wallet2"></i> Payments</a>
+      <a href="admin-cash-type.html" class="list-group-item"><i class="bi bi-cash-coin"></i> Cash Type</a>
+      <a href="admin-categories.html" class="list-group-item"><i class="bi bi-list-ul"></i> Categories</a>
+      <a href="admin-services.html" class="list-group-item active"><i class="bi bi-gear"></i> Services</a>
+      <a href="admin-manual-services.html" class="list-group-item"><i class="bi bi-tools"></i> Manual Services</a>
+      <a href="admin-broadcast.html" class="list-group-item"><i class="bi bi-megaphone"></i> Announcements</a>
+      <a href="admin-analytics.html" class="list-group-item"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+      <a href="admin-settings.html" class="list-group-item"><i class="bi bi-sliders"></i> Settings</a>
+      <a href="#" id="btnLogout" class="list-group-item text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+  </div>
+
+  <div id="page-content-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-primary shadow-sm" id="menu-toggle">
+                <i class="bi bi-list"></i> Menu
+            </button>
+            <h4 class="fw-bold m-0">Services</h4>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="row align-items-center g-2">
+                <div class="col-xl-2 col-md-4">
+                    <select id="statusFilter" class="form-select form-select-sm">
+                        <option value="view:all">All Services</option>
+                        <option value="view:active">Active Only</option>
+                        <option value="view:inactive">Inactive Services</option>
+                    </select>
+                </div>
+
+                <div class="col-xl-2 col-md-4">
+                    <select id="vendorFilter" class="form-select form-select-sm">
+                        <option value="">All Vendors</option>
+                    </select>
+                </div>
+
+                <div class="col-xl-2 col-md-4">
+                    <select id="categoryFilter" class="form-select form-select-sm">
+                        <option value="all">All Categories</option>
+                    </select>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <input id="searchSvc" class="form-control form-control-sm" placeholder="Search Service..." autocomplete="off">
+                </div>
+
+                <div class="col-xl-3 col-12">
+                    <div class="d-flex gap-2 flex-wrap justify-content-xl-end">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-primary fw-bold dropdown-toggle" type="button" id="bulkActionMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-lightning-charge"></i> Action
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="bulkActionMenu">
+                                <li>
+                                    <button type="button" id="btnBulkChangeCategory" class="dropdown-item">
+                                        <i class="bi bi-tags me-2"></i> Change Category
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" id="btnAddService" class="dropdown-item">
+                                        <i class="bi bi-plus-lg me-2"></i> Add Services
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" id="btnBulkActivateServices" class="dropdown-item">
+                                        <i class="bi bi-check-circle me-2"></i> Active Services
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" id="btnBulkDisableServices" class="dropdown-item">
+                                        <i class="bi bi-x-circle me-2"></i> Disable Services
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" id="btnBulkDeleteServices" class="dropdown-item text-danger">
+                                        <i class="bi bi-trash3 me-2"></i> Delete Selected
+                                    </button>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <button type="button" id="btnSaveSelection" class="dropdown-item">
+                                        <i class="bi bi-save2 me-2"></i> Save Changes
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 65vh; overflow: auto;">
+            <table class="table table-sm table-hover mb-0" style="font-size: 0.85rem;">
+                <thead style="position: sticky; top: 0; background: #f8f9fa; z-index: 2; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <tr>
+                        <th width="40" class="text-center">
+                            <div class="d-flex flex-column align-items-center lh-1">
+                                <small class="text-muted mb-1">Bulk</small>
+                                <input type="checkbox" id="bulkSelectAll" class="form-check-input" title="Select all visible services">
+                            </div>
+                        </th>
+                        <th width="70">ID</th>
+                        <th width="200">Vendor</th>
+                        <th width="150">Category</th>
+                        <th>Service Name</th>
+                        <th width="90">Vendor Cost</th>
+                        <th width="70">Profit%</th>
+                        <th width="90">User Price (INR)</th>
+                        <th width="95">Status</th>
+                        <th width="150">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="serviceTableBody">
+                    </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white small text-muted">
+            Showing <span id="countDisplay">0</span> services
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="vendorPickerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label class="small text-muted mb-1">Choose vendor to load services</label>
+        <select id="vendorPickerSelect" class="form-select">
+          <option value="">Select vendor</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="btnVendorPickerConfirm" class="btn btn-sm btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="bulkCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label class="small text-muted mb-1">Choose target category for selected services</label>
+        <select id="bulkCategoryFilter" class="form-select">
+          <option value="">Bulk Category</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="btnApplyBulkCategory" class="btn btn-sm btn-warning fw-bold">Apply Category</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editServiceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Service Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="editServiceForm" class="modal-body">
+        <div class="row g-2">
+          <div class="col-md-4">
+            <label class="small text-muted">Panel Service ID</label>
+            <input id="editPanelServiceId" class="form-control form-control-sm" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Vendor Service ID</label>
+            <input id="editVendorServiceId" class="form-control form-control-sm" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Vendor ID</label>
+            <input id="editVendorId" class="form-control form-control-sm" readonly>
+          </div>
+          <div class="col-md-8">
+            <label class="small text-muted">Service Name</label>
+            <input id="editServiceName" class="form-control form-control-sm" required>
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Category</label>
+            <select id="editServiceCategory" class="form-select form-select-sm" required>
+              <option value="General">General</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Type</label>
+            <input id="editServiceType" class="form-control form-control-sm" placeholder="Default" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Min</label>
+            <input id="editServiceMin" type="number" class="form-control form-control-sm" min="0">
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Max</label>
+            <input id="editServiceMax" type="number" class="form-control form-control-sm" min="0">
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Vendor Price (Per 1k)</label>
+            <input id="editVendorPrice" type="number" step="0.0001" class="form-control form-control-sm" min="0">
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">Profit %</label>
+            <input id="editServiceProfit" type="number" class="form-control form-control-sm" step="0.01">
+          </div>
+          <div class="col-md-4">
+            <label class="small text-muted">User Price (INR per 1k)</label>
+            <input id="editUserPrice" type="number" step="0.0001" class="form-control form-control-sm" min="0">
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <div class="form-check">
+              <input id="editServiceActive" class="form-check-input" type="checkbox">
+              <label class="form-check-label small text-muted" for="editServiceActive">Active</label>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="small text-muted">Description</label>
+            <textarea id="editServiceDescription" class="form-control form-control-sm" rows="3"></textarea>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="btnSaveEditedService" class="btn btn-sm btn-primary">Save Service</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="admin-services.js"></script>
+
+<script type="module" src="admin-sync.js"></script>
+</body>
+</html>
