@@ -995,32 +995,28 @@ if (btnPlaceOrder) {
 
     btnPlaceOrder.disabled = true; btnPlaceOrder.textContent = "Placing...";
 
-    // Run duplicate-check and order POST in parallel — cancel POST if a duplicate is found.
-    const controller = new AbortController();
-
+    // Duplicate check runs in parallel but is NON-FATAL: a failed check
+    // (permissions, network) must NOT block a real order from being placed.
     const dupCheckPromise = (async () => {
-      // Narrow duplicate check: only fetch the top few active orders on this exact link.
-      const qCheck = query(
-        collection(db, "orders_active"),
-        where("payer", "==", USERNAME),
-        where("link", "==", link),
-        limit(5)
-      );
-      const checkSnap = await getDocs(qCheck);
-      const activeOrder = checkSnap.docs.find(d => {
-        const data = d.data();
-        const st = (data.status || "").toLowerCase().trim();
-        const isSameService = String(data.serviceId) === String(currentService.id);
-        const isActive = ["pending", "processing", "in progress", "queue", "queued"].includes(st);
-        return isSameService && isActive;
-      });
-      if (activeOrder) {
-        controller.abort();
-        const dupErr = new Error(`Order ALREADY ACTIVE on this link!\nStatus: ${activeOrder.data().status}\nPlease wait.`);
-        dupErr.__duplicate = true;
-        throw dupErr;
+      try {
+        const qCheck = query(
+          collection(db, "orders_active"),
+          where("payer", "==", USERNAME),
+          where("link", "==", link),
+          limit(5)
+        );
+        const checkSnap = await getDocs(qCheck);
+        return checkSnap.docs.find(d => {
+          const data = d.data();
+          const st = (data.status || "").toLowerCase().trim();
+          const isSameService = String(data.serviceId) === String(currentService.id);
+          const isActive = ["pending", "processing", "in progress", "queue", "queued"].includes(st);
+          return isSameService && isActive;
+        }) || null;
+      } catch (e) {
+        console.warn("[neworder] duplicate check skipped:", e);
+        return null;
       }
-      return null;
     })();
 
     const payload = {
@@ -1031,21 +1027,21 @@ if (btnPlaceOrder) {
     };
     if (finalComments) payload.comments = finalComments;
 
-    const orderPromise = fetch(ORDER_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-      keepalive: true
-    }).then(async (res) => {
+    try {
+      const activeDup = await dupCheckPromise;
+      if (activeDup) {
+        alert(`Order ALREADY ACTIVE on this link!\nStatus: ${activeDup.data().status}\nPlease wait.`);
+        return;
+      }
+
+      const res = await fetch(ORDER_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json.error || "Failed");
-      return json;
-    });
-
-    try {
-      // Wait for both — duplicate check gates the success.
-      const [, json] = await Promise.all([dupCheckPromise, orderPromise]);
 
       $("osOrderId").textContent = json.orderId || "N/A";
       $("osServiceName").textContent = currentService.title;
@@ -1056,12 +1052,8 @@ if (btnPlaceOrder) {
       $("osBalance").textContent = `\u20B9${newBal}`;
       new bootstrap.Modal($("orderSuccessModal")).show();
     } catch (err) {
-      // Swallow the AbortError that comes from cancelling the POST after a duplicate hit.
-      if (err && (err.name === "AbortError" || err.__duplicate)) {
-        if (err.__duplicate) alert(err.message);
-      } else {
-        alert(err.message || "Failed");
-      }
+      console.error("[neworder] place order failed:", err);
+      alert(err.message || "Failed to place order");
     } finally {
       btnPlaceOrder.disabled = false; btnPlaceOrder.textContent = "PLACE ORDER";
     }
